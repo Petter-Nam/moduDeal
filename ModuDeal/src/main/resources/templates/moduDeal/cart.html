@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/moduDeal/index.html}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<!--================Home Banner Area =================-->
+		<section class="banner_area">
+			<div class="banner_inner d-flex align-items-center">
+				<div class="container">
+					<div
+						class="banner_content d-md-flex justify-content-between align-items-center">
+						<div class="mb-3 mb-md-0">
+							<h2>카트</h2>
+							<p>이용자의 이력을 확인하세요.</p>
+						</div>
+						<div class="page_link">
+							<a href="/main.html">Home</a> <a href="cart.html">Cart</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--================End Home Banner Area =================-->
+		<!--================Product Description Area =================-->
+		<section class="product_description_area">
+			<div class="container">
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item"><a class="nav-link" id="home-tab"
+						data-toggle="tab" href="#home" role="tab" aria-controls="home"
+						aria-selected="true">구매중인 상품</a></li>
+					<li class="nav-item"><a class="nav-link" id="profile-tab"
+						data-toggle="tab" href="#profile" role="tab"
+						aria-controls="profile" aria-selected="false">판매중인
+							상품</a></li>
+					<li class="nav-item"><a class="nav-link" id="contact-tab"
+						data-toggle="tab" href="#contact" role="tab"
+						aria-controls="contact" aria-selected="false">찜한 상품</a>
+					</li>
+				</ul>
+				<div class="tab-content" id="myTabContent">
+					<div class="tab-pane fade" id="home" role="tabpanel"
+						aria-labelledby="home-tab">
+						<!-- Cart area -->
+						<section class="cart_area">
+							<div class="container">
+								<div class="cart_inner">
+									<div class="table-responsive">
+										<table class="table">
+											<thead>
+												<tr>
+													<th scope="col">Product</th>
+													<th scope="col">Price</th>
+													<th scope="col">Quantity</th>
+													<th scope="col">Total</th>
+												</tr>
+											</thead>
+											<tbody>
+												<!-- Your cart items here -->
+												<tr>
+													<!-- Cart item 1 -->
+												</tr>
+												<tr>
+													<!-- Cart item 2 -->
+												</tr>
+												<tr>
+													<!-- Cart item 3 -->
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!-- End Cart area -->
+					</div>
+					<div class="tab-pane fade" id="profile" role="tabpanel"
+						aria-labelledby="profile-tab">
+						<!-- Content for "판매중인 상품" tab goes here -->
+					</div>
+					<div class="tab-pane fade" id="contact" role="tabpanel"
+						aria-labelledby="contact-tab">
+						<!-- Content for "찜한 상품" tab goes here -->
+					</div>
+					<div class="tab-pane fade" id="review" role="tabpanel"
+						aria-labelledby="review-tab">
+						<!-- Content for "선호하는 판매자가 올린 상품" tab goes here -->
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--================End Product Description Area =================-->
+	</div>
+
+</body>
+</html>

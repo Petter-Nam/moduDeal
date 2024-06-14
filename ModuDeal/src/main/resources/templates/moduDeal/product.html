@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/moduDeal/index.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/linericon/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/themify-icons.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/owl-carousel/owl.carousel.min.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/lightbox/simpleLightbox.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/nice-select/css/nice-select.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/animate-css/animate.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/jquery-ui/jquery-ui.css}" />
+    <!-- main css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/responsive.css}" />
+
+    <style>
+        /* 추가한 CSS */
+        .board_area {
+            padding: 50px 0;
+        }
+
+        .board_form {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main_btn {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .main_btn:hover {
+            background-color: #0056b3;
+        }
+
+        .gallery img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!--================Home Banner Area =================-->
+    <section class="banner_area">
+        <div class="banner_inner d-flex align-items-center">
+            <div class="container">
+                <div class="banner_content d-md-flex justify-content-between align-items-center">
+                    <div class="mb-3 mb-md-0">
+                        <h2>내 상품 등록하기</h2>
+                        <p>서로에게 불편이 없도록 상품의 실제 사진과 설명 및 주의사항을 적어주시면 좋습니다.</p>
+                    </div>
+                    <div class="page_link">
+                        <a th:href="@{/moduDeal/index}">Home</a> <a th:href="@{/moduDeal/blog}">Blog </a> <a th:href="@{/moduDeal/single-blog}">Blog Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Home Banner Area =================-->
+
+    <!--================Board Area =================-->
+    <section class="board_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="board_form">
+                        <h2>상품 등록</h2>
+                        <form class="form-contact board_form" th:action="@{/board/product}" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="title" id="title" type="text" placeholder="[상품종류][상품 모델][제목]">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="description" id="description" cols="30" rows="9" placeholder="상품 설명"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input class="form-control" name="qty" id="qty" type="number" placeholder="상품 수량">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input class="form-control" name="price" id="price" type="number" placeholder="상품 개당 가격">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="productCategory">상품 종류</label> 
+                                        <select class="form-control" id="productCategory" name="productCategory">
+                                            <option value="기타">기타</option>
+                                            <option value="의류">의류</option>
+                                            <option value="액세서리">액세서리</option>
+                                            <option value="가방 / 지갑">가방 / 지갑</option>
+                                            <option value="가구 / 인테리어">가구 / 인테리어</option>
+                                            <option value="전자제품">전자제품</option>
+                                            <option value="차량">차량</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="imgOriginalName">상품 이미지 업로드</label>
+                                        <input type="file" id="imgOriginalName" name="imgOriginalName" multiple accept="image/*"> 
+                                        <small id="imagesHelp" class="form-text text-muted">여러 이미지를 선택하여 업로드할 수 있습니다.</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <button type="submit" class="main_btn">게시하기</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="userId" value="${UserDTO.userId}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="gallery">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================Board Area =================-->
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/stellar.js}"></script>
+<script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
+<script th:src="@{/vendors/nice-select/js/jquery.nice-select.min.js}"></script>
+<script th:src="@{/vendors/isotope/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/vendors/isotope/isotope-min.js}"></script>
+<script th:src="@{/vendors/owl-carousel/owl.carousel.min.js}"></script>
+<script th:src="@{/js/jquery.ajaxchimp.min.js}"></script>
+<script th:src="@{/js/mail-script.js}"></script>
+<script th:src="@{/js/theme.js}"></script>
+
+<script>
+    // 이 부분은 <script> 태그의 끝에 추가하세요
+    $(document).ready(function() {
+        // 파일 입력 변경 이벤트를 처리하는 함수
+        $('#imgOriginalName').on('change', function() {
+            var files = $(this)[0].files;
+            $('.gallery').empty(); // 이전 이미지를 지우기
+
+            // 선택된 파일들을 반복문으로 처리
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+
+                // 파일 정보를 캡처하는 클로저.
+                reader.onload = (function(theFile) {
+                    return function(e) {
+                        // 썸네일 렌더링.
+                        var img = $('<img>').attr('src', e.target.result);
+                        $('.gallery').append(img); // 이미지를 갤러리에 추가
+                    };
+                })(file);
+
+                // 이미지 파일을 데이터 URL로 읽기.
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+

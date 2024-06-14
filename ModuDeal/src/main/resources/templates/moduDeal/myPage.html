@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Page</title>
+<script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+<script th:src="@{http://dmaps.daum.net/map_js_init/postcode.v2.js}"></script>
+<style>
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.section {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon {
+    margin-right: 10px;
+}
+
+.green {
+    color: #24855b;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/* Navigation */
+.navigation {
+    background-color: #24855b;
+    color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.navigation-item {
+    margin-bottom: 10px;
+}
+
+.navigation-item:last-child {
+    margin-bottom: 0;
+}
+
+.navigation-item a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navigation-item a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+.btn {
+    background-color: #24855b;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #1a603b;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+}
+
+.btn-primary:hover {
+    background-color: #45A049;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#passwordMsg {
+    margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="navigation">
+        <div class="heading">moduDeal</div>
+        <div class="navigation-item">
+            <a th:href="@{/moduDeal/main}"> <span>메인화면</span> <span class="icon">></span>
+            </a>
+        </div>
+        <div class="navigation-item">
+            <a th:href="@{/moduDeal/cart}"> <span>카트목록</span> <span class="icon">></span>
+            </a>
+        </div>
+        <div class="navigation-item">
+            <a href="#"> <span>찜한상품</span> <span class="icon">></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <!-- 개인정보 섹션 -->
+        <div class="section">
+            <div class="flex">
+                <div class="green">개인정보</div>
+                <div class="modify"></div>
+            </div>
+            <div class="info">
+                <div>
+                    이름 : <span th:text="${userDTO.name}"></span>
+                </div>
+                <div>
+                    생년월일 : <span th:text="${#dates.format(userDTO.birthDate , 'yyyy년 MM월 dd일')}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 아이디 비밀번호 섹션 -->
+        <div class="section">
+            <div class="flex">
+                <div class="green">아이디 비밀번호</div>
+                <div class="modify">비밀번호 수정</div>
+            </div>
+            <div class="info">
+                <div>
+                    아이디 : <span th:text="${userDTO.userId}"></span>
+                </div>
+                <div>
+                    <form id="passwordForm" th:action="@{/moduDeal/changePassword}" method="post">
+                        <div class="form-group">
+                            <label for="password">새 비밀번호</label>
+                            <input type="password" id="password" name="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">비밀번호 확인</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control">
+                            <input type="hidden" id="userId" name="userId" th:value="${userDTO.userId}">
+                        </div>
+                        <button type="button" id="changePasswordBtn" class="btn btn-primary">비밀번호 변경</button>
+                    </form>
+                    <!-- 비밀번호 확인 메시지 출력을 위한 div -->
+                    <div id="passwordMsg"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메일 섹션 -->
+		<div class="section">
+		    <div class="flex">
+		        <div class="green">메일</div>
+		        <div class="modify">메일 수정</div>
+		    </div>
+		    <div class="info">
+		        <form th:action="@{/moduDeal/updateEmail}" method="post" th:onsubmit="return updateEmail()">
+		            <div class="form-group">
+		                <label for="email">이메일</label>
+		                <input type="email" id="email" name="email" th:value="${userDTO.email}" class="form-control" required>
+		                <input type="hidden" id="userId" name="userId" th:value="${userDTO.userId}">
+		            </div>
+		            <button type="submit" class="btn btn-primary">수정하기</button>
+		        </form>
+		    </div>
+		</div>
+
+        <!-- 전화번호 섹션 -->
+        <div class="section">
+            <div class="flex">
+                <div class="green">전화번호</div>
+                <div class="modify">전화번호 수정</div>
+            </div>
+            <div class="info">
+                <form th:action="@{/moduDeal/updateHp}" method="post" th:onsubmit="return updatePhone()">
+                    <div class="form-group">
+                        <label for="hp">휴대전화번호</label>
+                        <input type="tel" id="hp" name="hp" th:value="${userDTO.hp}" class="form-control">
+                        <input type="hidden" id="userId" name="userId" th:value="${userDTO.userId}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">수정하기</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 주소 섹션 -->
+        <div class="section">
+            <div class="flex">
+                <div class="green">주소</div>
+                <div class="modify">주소를 수정하세요.</div>
+            </div>
+            <div class="info">
+                <form th:action="@{/moduDeal/updateAddress}" method="post" th:onsubmit="return updateAddress()">
+                    <div class="form-group">
+                        <label for="addressZipcode">우편번호</label>
+                        <input type="text" id="addressZipcode" name="addressZipcode" th:value="${userDTO.addressZipcode}" class="form-control">
+                        <button type="button" class="btn btn-secondary" onclick="execDaumPostcode()">우편번호 찾기</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="addressRoad">도로명 주소</label>
+                        <input type="text" id="addressRoad" name="addressRoad" th:value="${userDTO.addressRoad}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressJibun">지번 주소</label>
+                        <input type="text" id="addressJibun" name="addressJibun" th:value="${userDTO.addressJibun}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="addressNamuji">나머지 주소</label>
+                        <input type="text" id="addressNamuji" name="addressNamuji" th:value="${userDTO.addressNamuji}" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">수정하기</button>
+                    <input type="hidden" id="userId" name="userId" th:value="${userDTO.userId}">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                document.getElementById('addressZipcode').value = data.zonecode;
+                document.getElementById('addressRoad').value = data.roadAddress;
+                document.getElementById('addressJibun').value = data.jibunAddress;
+            }
+        }).open();
+    }
+
+    $(function() {
+        // 비밀번호 변경 버튼 클릭 이벤트 처리
+        $('#changePasswordBtn').click(function() {
+            // 입력한 비밀번호와 비밀번호 확인 필드의 값을 가져옵니다.
+            let passwd = $('#password').val();
+            let confirmPasswd = $('#confirmPassword').val();
+            let passwordMsg = $('#passwordMsg');
+            
+            // 초기화 메시지 삭제
+            passwordMsg.empty();
+
+            // 비밀번호 유효성 검사 함수
+            function isValidPassword(password) {
+                const specialCharPattern = /[^a-zA-Z0-9]/g; // 특수문자 패턴
+                const uppercasePattern = /[A-Z]/g; // 대문자 패턴
+                const minLength = 8; // 최소 길이
+
+                // 특수문자 두 개 이상 포함
+                const specialCharCount = (password.match(specialCharPattern) || []).length >= 2;
+                // 대문자 하나 이상 포함
+                const hasUppercase = uppercasePattern.test(password);
+                // 최소 길이 8자 이상
+                const isMinLength = password.length >= minLength;
+
+                return specialCharCount && hasUppercase && isMinLength;
+            }
+
+            // 비밀번호와 비밀번호 확인이 일치하는지 확인하고 유효성을 검사합니다.
+            if (passwd === confirmPasswd && passwd.trim() !== '') {
+                if (isValidPassword(passwd)) {
+                    // 일치할 경우 폼을 서브밋합니다.
+                    $('#passwordForm').submit();
+                } else {
+                    // 유효하지 않은 경우 메시지를 출력합니다.
+                    passwordMsg.html("<span style='color:red;'>비밀번호는 최소 8자리 이상, 대문자 하나 이상, 특수문자 두 개 이상이어야 합니다.</span>");
+                }
+            } else {
+                // 불일치할 경우 메시지를 출력합니다.
+                passwordMsg.html("<span style='color:red;'>비밀번호가 일치하지 않거나 비어 있습니다.</span>");
+            }
+        });
+    });
+
+
+    // 이메일 폼 유효성 검사
+    function updateEmail() {
+        let email = $('#email').val();
+        
+        // 이메일 유효성 검사 로직 추가
+        let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            alert('유효한 이메일 주소를 입력해주세요.');
+            return false;
+        }
+
+        return true; // 유효성 검사를 통과했습니다.
+    }
+
+    // 주소 폼 유효성 검사
+    function updateAddress() {
+        let zipcode = $('#addressZipcode').val();
+        let roadAddress = $('#addressRoad').val();
+        let jibunAddress = $('#addressJibun').val();
+        let namujiAddress = $('#addressNamuji').val();
+
+        if (!zipcode || !roadAddress || !jibunAddress || !namujiAddress) {
+            alert('모든 주소 필드를 작성해야 합니다.');
+            return false; // 폼 제출을 중단합니다.
+        }
+        return true; // 유효성 검사를 통과했습니다.
+    }
+</script>
+
+</body>
+</html>
