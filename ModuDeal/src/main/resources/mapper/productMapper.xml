@@ -2,11 +2,9 @@
 <mapper
 	namespace="com.application.moduDeal.product.dao.ProductDAO">
 
-	<insert id="saveProduct" parameterType="int">
-		<selectKey resultType="int" keyProperty="productId" order="BEFORE">
-        SELECT PRODUCT_ID FROM PRODUCT     
-       	WHERE PRODUCT_ID  = #{productId}   
-    	</selectKey>  
+	<!-- 상품 저장 -->
+	<insert id="saveProduct" parameterType="ProductDTO"
+		useGeneratedKeys="true" keyProperty="productId">
 		INSERT INTO PRODUCT (
 		TITLE,
 		DESCRIPTION,
@@ -23,12 +21,12 @@
 		#{price},
 		#{productCategory},
 		#{userId},
-		#{productAt}
+		#{productAt, jdbcType=TIMESTAMP}
 		)
 	</insert>
-		
-	
-	<insert id="saveProductImages" parameterType="list">
+
+	<!-- 상품 이미지 저장 -->
+	<insert id="saveProductImages" parameterType="List">
 		INSERT INTO PRODUCT_IMG (
 		IMG_UUID,
 		PRODUCT_ID,
@@ -41,9 +39,86 @@
 			#{item.imgUuid},
 			#{item.productId},
 			#{item.imgOriginalName},
-			#{item.imgAt}
+			#{item.imgAt, jdbcType=TIMESTAMP}
 			)
 		</foreach>
 	</insert>
+
+	<!-- 상품 결과 매핑 -->
+	<resultMap id="ProductResultMap" type="ProductDTO">
+		<id property="productId" column="productId" />
+		<result property="title" column="title" />
+		<result property="description" column="description" />
+		<result property="qty" column="qty" />
+		<result property="price" column="price" />
+		<result property="productCategory" column="productCategory" />
+		<result property="userId" column="userId" />
+		<result property="productAt" column="productAt" />
+		<collection property="productImages" ofType="ProductImgDTO"
+			resultMap="ProductImgResultMap">
+			<id column="imgUuid" property="imgUuid" />
+			<result column="productId" property="productId" />
+			<result column="imgOriginalName" property="imgOriginalName" />
+			<result column="imgAt" property="imgAt" />
+		</collection>
+	</resultMap>
+
+	<!-- 상품 이미지 결과 매핑 -->
+	<resultMap id="ProductImgResultMap" type="ProductImgDTO">
+		<id column="imgUuid" property="imgUuid" />
+		<result column="productId" property="productId" />
+		<result column="imgOriginalName" property="imgOriginalName" />
+		<result column="imgAt" property="imgAt" />
+	</resultMap>
+
+	<!-- 최근 상품 목록 가져오기 -->
+	<select id="getRecentProducts" resultMap="ProductResultMap">
+		SELECT
+		P.PRODUCT_ID AS productId,
+		P.TITLE AS title,
+		P.PRICE AS price,
+		P.QTY AS qty,
+		P.DESCRIPTION AS description,
+		PI.IMG_UUID AS imgUuid,
+		PI.IMG_ORIGINAL_NAME AS imgOriginalName,
+		PI.IMG_AT AS imgAt
+		FROM
+		PRODUCT P
+		LEFT JOIN
+		PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+		ORDER BY P.PRODUCT_AT DESC
+		LIMIT 12
+	</select>
+
+	<!-- 필터링된 최근 상품 목록 가져오기 -->
+	<!-- <select id="getRecentProductsFiltered"
+		resultMap="ProductResultMap" parameterType="map">
+		SELECT
+		P.PRODUCT_ID AS productId,
+		P.TITLE AS title,
+		P.PRICE AS price,
+		P.QTY AS qty,
+		P.DESCRIPTION AS description,
+		PI.IMG_UUID AS imgUuid,
+		PI.IMG_ORIGINAL_NAME AS imgOriginalName,
+		PI.IMG_AT AS imgAt
+		FROM
+		PRODUCT P
+		LEFT JOIN
+		PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+		<where>
+			<if test="minPrice != null">
+				AND P.PRICE &gt;= #{minPrice}
+			</if>
+			<if test="maxPrice != null">
+				AND P.PRICE &lt;= #{maxPrice}
+			</if>
+			<if test="category != null">
+				AND P.PRODUCT_CATEGORY = #{category}
+			</if>
+		</where>
+		ORDER BY P.PRODUCT_AT DESC
+		LIMIT 12
+	</select> -->
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.application.moduDeal.product.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -15,5 +16,6 @@ public class ProductDTO {
     private String productCategory;
     private String userId;
     private Date productAt;
-    
+    private List<ProductImgDTO> productImages;
+
 }

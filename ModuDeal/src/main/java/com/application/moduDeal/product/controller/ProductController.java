@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,73 +23,85 @@ import com.application.moduDeal.product.dto.ProductImgDTO;
 import com.application.moduDeal.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/board")
 public class ProductController {
 
-	@Value("${file.repo.path}")
-	private String fileRepoPath;
+    @Value("${file.repo.path}")
+    private String fileRepoPath;
 
-	@Autowired
-	private ProductService productService;
-	
-	@GetMapping("/product")
-	public String product(HttpServletRequest request) {
-		
-		HttpSession session = request.getSession();
-		String loginUser = (String)session.getAttribute("userId");
-		
-		if (loginUser == null) {
-			return "redirect:/moduDeal/login";
-		}
-		
-		return "moduDeal/product";
-	}
-	
-	@PostMapping("/product") // 상품정보 , 이미지 저장 게시판
-	@ResponseBody
-	public String product(@RequestParam("imgOriginalName") List<MultipartFile> uploadProfile,
-			@ModelAttribute ProductDTO productDTO, HttpServletRequest request) throws IllegalStateException, IOException {
-		HttpSession session = request.getSession();
-		String loginUser = (String)session.getAttribute("userId");
-		
-		productDTO.setUserId(loginUser);
-		//ProductDTO 날짜 생성 및 데이터 저장
-		productDTO.setProductAt(new Date());
-		
-		productService.saveProduct(productDTO);
+    @Autowired
+    private ProductService productService;
 
-	
-		List<ProductImgDTO> productImgDTOList = new ArrayList<>();
-		for (MultipartFile file : uploadProfile) {
-			if (!file.isEmpty()) {
-				String originalFileName = file.getOriginalFilename();
-				UUID uuid = UUID.randomUUID();
-				String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-				String uploadProfileName = uuid + extension;
-				
-				
-				file.transferTo(new File(fileRepoPath + uploadProfileName));
-				ProductImgDTO productImgDTO = new ProductImgDTO();
-				
-				
-				productImgDTO.setImgUuid(uploadProfileName);
-				productImgDTO.setProductId(productDTO.getProductId());
-				productImgDTO.setImgOriginalName(originalFileName);
-				productImgDTO.setImgAt(new Date());
-				productImgDTOList.add(productImgDTO);
-			}
-		}
-		productService.saveProductImages(productImgDTOList);
+    @GetMapping("/product")
+    public String product(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("userId");
 
-		return """
-				<script>
-				    alert('업로드 되었습니다.');
-				    location.href = '/moduDeal/main';
-				</script>
-				""";
-	}
+        if (loginUser == null) {
+            return "redirect:/moduDeal/login";
+        }
 
+        return "moduDeal/product";
+    }
+
+    @PostMapping("/product")
+    @ResponseBody
+    public String product(@RequestParam("imgOriginalName") List<MultipartFile> uploadProfile,
+                          @ModelAttribute ProductDTO productDTO, HttpServletRequest request) throws IllegalStateException, IOException {
+        HttpSession session = request.getSession();
+        String loginUser = (String) session.getAttribute("userId");
+
+        productDTO.setUserId(loginUser);
+        productDTO.setProductAt(new Date());
+
+        productService.saveProduct(productDTO);
+
+        List<ProductImgDTO> productImgDTOList = new ArrayList<>();
+        for (MultipartFile file : uploadProfile) {
+            if (!file.isEmpty()) {
+                String originalFileName = file.getOriginalFilename();
+                UUID uuid = UUID.randomUUID();
+                String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                String uploadProfileName = uuid + extension;
+
+                file.transferTo(new File(fileRepoPath + uploadProfileName));
+                ProductImgDTO productImgDTO = new ProductImgDTO();
+                productImgDTO.setImgUuid(uploadProfileName);
+                productImgDTO.setProductId(productDTO.getProductId());
+                productImgDTO.setImgOriginalName(originalFileName);
+                productImgDTO.setImgAt(new Date());
+                productImgDTOList.add(productImgDTO);
+            }
+        }
+        productService.saveProductImages(productImgDTOList);
+
+        return """
+                <script>
+                    alert('상품이 등록되었습니다..');
+                    location.href = '/board/category';
+                </script>
+                """;
+    }
+
+    @GetMapping("/category")
+    public String getCategoryPage(Model model) {
+
+        List<ProductDTO> recentProducts = productService.getRecentProducts();
+        model.addAttribute("recentProducts", recentProducts);
+        return "/moduDeal/category";
+    }
+
+//    @GetMapping("/filterProducts")
+//    public String filterProducts(@RequestParam(required = false) Integer minPrice,
+//                                 @RequestParam(required = false) Integer maxPrice,
+//                                 @RequestParam(required = false) String category,
+//                                 Model model) {
+//        List<ProductDTO> filteredProducts = productService.filterProducts(minPrice, maxPrice, category);
+//        model.addAttribute("recentProducts", filteredProducts);
+//        return "moduDeal/category::filteredProducts";
+//    }
 }
