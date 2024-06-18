@@ -30,7 +30,7 @@
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-light w-100">
                     <!-- Brand and toggle get grouped for better mobile display -->
-                    <a class="navbar-brand logo_h" th:href="@{/moduDeal/main}">
+                    <a class="navbar-brand logo_h" th:href="@{/}">
                         <img src="/img/logo.png" alt="" />
                     </a>
                 </nav>
@@ -116,7 +116,7 @@
                     success: function (isValidMember) {
 
                         if (isValidMember == "y") {
-                            location.href = "/moduDeal/main";
+                            location.href = "/";
                         } else {
                             $("#failMsg").html("<span style='color:red;'>아이디와 패스워드를 확인하세요.</span>");
                         }

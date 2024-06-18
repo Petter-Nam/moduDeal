@@ -1,51 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/moduDeal/index.html}">
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/moduDeal/index.html}">
 <head>
     <meta charset="UTF-8">
     <title>상품 구매</title>
-<script th:src="@{/js/jquery-3.6.1.min.js}"></script>
-  <!-- <script th:src="@{/js/jquery-ui.min.js}"></script>
-    <script>
-        $(document).ready(function() {
-            $('#slider-range').slider({
-                range: true,
-                min: 0,
-                max: 1000,
-                values: [0, 1000],
-                slide: function(event, ui) {
-                    $('#amount').val('₩' + ui.values[0] + ' - ₩' + ui.values[1]);
-                }
-            });
-            $('#amount').val('₩' + $('#slider-range').slider('values', 0) +
-                ' - ₩' + $('#slider-range').slider('values', 1));
-
-            $('#price-filter, #category-filter').on('change', function() {
-                applyFilters();
-            });
-
-            function applyFilters() {
-                var minPrice = $('#slider-range').slider('values', 0);
-                var maxPrice = $('#slider-range').slider('values', 1);
-                var category = $('#category-filter').val();
-
-                $.ajax({
-                    url: '/board/filterProducts',
-                    type: 'GET',
-                    data: {
-                        minPrice: minPrice,
-                        maxPrice: maxPrice,
-                        category: category
-                    },
-                    success: function(response) {
-                        $('.latest_product_inner').html(response);
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                    }
-                });
-            }
-        });
-    </script> -->
+    <script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}">
+    <style>
+        /* Additional styling can be applied here */
+        .category-button {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .category-item {
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .category-item:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
     <div layout:fragment="content">
@@ -58,7 +38,7 @@
                             <p>카테고리를 설정하여 원하는 상품을 더 쉽게 찾을 수 있습니다.</p>
                         </div>
                         <div class="page_link">
-                            <a th:href="@{/moduDeal/main}">메인페이지</a>
+                            <a th:href="@{/}">메인페이지</a>
                             <a th:href="@{/moduDeal/category}">거래</a>
                         </div>
                     </div>
@@ -72,74 +52,85 @@
                     <div class="col-lg-9">
                         <div class="product_top_bar">
                             <div class="left_dorp">
+                                
                             </div>
                         </div>
 
-						<div class="latest_product_inner">
-						    <div class="row">
-						        <div th:each="product : ${recentProducts}" class="col-lg-4 col-md-6">
-						            <div class="single-product">
-						                <div class="product-img">
-						                    <img class="card-img" th:src="@{${fileRepoPath} + ${product.productImages[0].imgUuid}}" alt="상품 이미지" />
-						                    <div class="p_icon">
-						                        <a href="#"><i class="ti-eye"></i></a>
-						                        <a href="#"><i class="ti-heart"></i></a>
-						                        <a href="#"><i class="ti-shopping-cart"></i></a>
-						                    </div>
-						                </div>
-						                <div class="product-btm">
-						                    <h4 th:text="${product.title}"></h4>
-						                    <div class="mt-3">
-						                        <span th:text="${'₩' + product.price}"></span>
-						                        <span th:text="'수량: ' + ${product.qty}"></span>
-						                    </div>
-						                </div>
-						            </div>
-						        </div>
-						    </div>
-						</div>
-						
-						
+                        <div class="latest_product_inner">
+                            <div class="row">
+                                <div th:each="product : ${recentProducts}" class="col-lg-4 col-md-6">
+                                    <div class="single-product">
+                                        <div class="product-img">
+                                            <img class="card-img" th:src="@{/board/thumbnails(fileName=${product.imgUuid})}" alt="상품 이미지" />
+                                            <div class="p_icon">
+                                                <a href="#"><i class="ti-eye"></i></a>
+                                                <a href="#"><i class="ti-heart"></i></a>
+                                                <a href="#"><i class="ti-shopping-cart"></i></a>
+                                            </div>
+                                        </div>
+                                        <div class="product-btm">
+                                            <h4 th:text="${product.title}"></h4>
+                                            <div class="mt-3">
+                                                <span th:text="'₩' + ${product.price}"></span>
+                                                <span th:text="'수량: ' + ${product.qty}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-lg-3">
                         <div class="left_sidebar_area">
-                            <aside class="left_widgets p_filter_widgets">
-                                <div class="l_w_title">
-                                    <h3>상품 종류</h3>
+                            <div class="l_w_title">
+                                <h3>상품 종류</h3>
+                            </div>
+                            <div class="widgets_inner" id="category-filter">
+                                <div class="category-button" data-category="">
+                                    <button class="category-item" data-category="">전체</button>
+                                    <button class="category-item" data-category="의류">의류</button>
+                                    <button class="category-item" data-category="악세사리">악세사리</button>
+                                    <button class="category-item" data-category="가방">가방 / 지갑</button>
+                                    <button class="category-item" data-category="가구">가구 / 인테리어</button>
+                                    <button class="category-item" data-category="전자기기">전자기기</button>
+                                    <button class="category-item" data-category="차량">차량</button>
+                                    <button class="category-item" data-category="기타">기타</button>
                                 </div>
-                                <div class="widgets_inner">
-                                    <select id="category-filter">
-                                        <option value="">- 카테고리 선택 -</option>
-                                        <option value="의류">의류</option>
-                                        <option value="악세사리">악세사리</option>
-                                        <option value="가방">가방 / 지갑</option>
-                                        <option value="가구">가구 / 인테리어</option>
-                                        <option value="전자기기">전자기기</option>
-                                        <option value="차량">차량</option>
-                                        <option value="기타">기타</option>
-                                    </select>
-                                </div>
-                            </aside>
-                            <aside class="left_widgets p_filter_widgets">
-                                <div class="l_w_title">
-                                    <h3>가격 필터</h3>
-                                </div>
-                                <div class="widgets_inner">
-                                    <div class="range_item">
-                                        <div id="slider-range"></div>
-                                        <div class="">
-                                            <label for="amount">가격:</label>
-                                            <input type="text" id="amount" readonly />
-                                        </div>
-                                    </div>
-                                </div>
-                            </aside>
+                            </div>
+
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.category-item').click(function() {
+                let category = $(this).attr('data-category');
+                applyCategoryFilter(category);
+            });
+
+            function applyCategoryFilter(category) {
+                let url = '/board/filterProducts?';
+
+                console.log("카테고리:", category);
+
+                if (category) {
+                    url += 'category=' + category;
+                }
+
+                console.log('요청 URL:', url);
+                window.location.href = url;
+            }
+        });
+    </script>
 </body>
 </html>
+
+

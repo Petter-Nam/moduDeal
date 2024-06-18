@@ -2,13 +2,17 @@ package com.application.moduDeal.product.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +27,6 @@ import com.application.moduDeal.product.dto.ProductImgDTO;
 import com.application.moduDeal.product.service.ProductService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -82,26 +85,36 @@ public class ProductController {
         return """
                 <script>
                     alert('상품이 등록되었습니다..');
-                    location.href = '/board/category';
+                    location.href = '/';
                 </script>
                 """;
     }
 
     @GetMapping("/category")
     public String getCategoryPage(Model model) {
-
-        List<ProductDTO> recentProducts = productService.getRecentProducts();
+    	
+    	List<Map<String,Object>> recentProducts = productService.getRecentProducts();
+ 
+    	System.out.println(recentProducts);
         model.addAttribute("recentProducts", recentProducts);
+
+        return "/moduDeal/category";
+    }
+    
+    @GetMapping("/thumbnails")
+    @ResponseBody
+    public Resource thumbnails(@RequestParam("fileName") String fileName) throws MalformedURLException {
+        // 썸네일 이미지 경로를 생성하여 반환
+    
+        return new UrlResource("file:" + fileRepoPath + fileName);
+    }
+
+    @GetMapping("/filterProducts")
+    public String filterProducts(@RequestParam(required = false) String category,
+                                 Model model) {
+        List<Map<String, Object>> filteredProducts = productService.filterProducts(category);
+        model.addAttribute("recentProducts", filteredProducts);
         return "/moduDeal/category";
     }
 
-//    @GetMapping("/filterProducts")
-//    public String filterProducts(@RequestParam(required = false) Integer minPrice,
-//                                 @RequestParam(required = false) Integer maxPrice,
-//                                 @RequestParam(required = false) String category,
-//                                 Model model) {
-//        List<ProductDTO> filteredProducts = productService.filterProducts(minPrice, maxPrice, category);
-//        model.addAttribute("recentProducts", filteredProducts);
-//        return "moduDeal/category::filteredProducts";
-//    }
 }

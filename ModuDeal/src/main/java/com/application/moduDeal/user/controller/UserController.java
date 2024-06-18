@@ -28,10 +28,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("/main") // 메인화면을 불러오는 코드입니다.
-	public String main() {
-		return "moduDeal/main";
-	}
 
 	@GetMapping("/login") // 로그인 화면을 부르는 코드입니다.
 	public String login() {
@@ -66,7 +62,7 @@ public class UserController {
 		String jsScript = """
 				<script>
 					alert('로그아웃 되었습니다.');
-					location.href = '/moduDeal/main';
+					location.href = '/';
 				</script>""";
 		return jsScript;
 	}
@@ -79,18 +75,13 @@ public class UserController {
 	@PostMapping("/register") // 회원가입 로직을 처리하는 코드입니다.
 	public String regit(@ModelAttribute UserDTO userDTO) {
 		userService.createUser(userDTO);
-		return "redirect:/moduDeal/main";
+		return "redirect:/";
 	}
 
 	@PostMapping("/validId") // 회원가입시 ID 중복 확인하는 코드입니다.
 	@ResponseBody
 	public String validId(@RequestParam("userId") String userId) {
 		return userService.checkValidId(userId);
-	}
-	
-	@GetMapping("/category")
-	public String category() {
-		return "/moduDeal/category";
 	}
 
 	@GetMapping("/myPage") // 마이페이지 화면 불러오는 코드입니다.
@@ -122,7 +113,7 @@ public class UserController {
 			String jsScript = """
 					<script>
 						alert('로그아웃 되었습니다.');
-						location.href = '/moduDeal/main';
+						location.href = '/';
 					</script>""";
 
 			return jsScript;

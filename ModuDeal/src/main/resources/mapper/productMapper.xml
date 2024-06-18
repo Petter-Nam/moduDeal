@@ -44,81 +44,61 @@
 		</foreach>
 	</insert>
 
+
 	<!-- 상품 결과 매핑 -->
-	<resultMap id="ProductResultMap" type="ProductDTO">
-		<id property="productId" column="productId" />
-		<result property="title" column="title" />
-		<result property="description" column="description" />
-		<result property="qty" column="qty" />
-		<result property="price" column="price" />
-		<result property="productCategory" column="productCategory" />
-		<result property="userId" column="userId" />
-		<result property="productAt" column="productAt" />
-		<collection property="productImages" ofType="ProductImgDTO"
-			resultMap="ProductImgResultMap">
-			<id column="imgUuid" property="imgUuid" />
-			<result column="productId" property="productId" />
-			<result column="imgOriginalName" property="imgOriginalName" />
-			<result column="imgAt" property="imgAt" />
-		</collection>
+	<resultMap id="ProductResultMap" type="hashmap">
+	    <result property="productId" column="PRODUCT_ID" />
+	    <result property="title" column="TITLE" />
+	    <result property="qty" column="QTY" />
+	    <result property="price" column="PRICE" />
+	    <result property="imgUuid" column="IMG_UUID" />
+	    <result property="imgOriginalName" column="IMG_ORIGINAL_NAME" />
+	    <result property="imgAt" column="IMG_AT" />
+	    <result property="productAt" column="PRODUCT_AT" />
 	</resultMap>
-
-	<!-- 상품 이미지 결과 매핑 -->
-	<resultMap id="ProductImgResultMap" type="ProductImgDTO">
-		<id column="imgUuid" property="imgUuid" />
-		<result column="productId" property="productId" />
-		<result column="imgOriginalName" property="imgOriginalName" />
-		<result column="imgAt" property="imgAt" />
-	</resultMap>
-
+	
 	<!-- 최근 상품 목록 가져오기 -->
 	<select id="getRecentProducts" resultMap="ProductResultMap">
 		SELECT
-		P.PRODUCT_ID AS productId,
-		P.TITLE AS title,
-		P.PRICE AS price,
-		P.QTY AS qty,
-		P.DESCRIPTION AS description,
-		PI.IMG_UUID AS imgUuid,
-		PI.IMG_ORIGINAL_NAME AS imgOriginalName,
-		PI.IMG_AT AS imgAt
+			P.PRODUCT_ID AS PRODUCT_ID,
+			P.TITLE AS TITLE,
+			P.PRICE AS PRICE,
+			P.QTY AS QTY,
+			P.DESCRIPTION AS DESCRIPTION,
+			PI.IMG_UUID AS IMG_UUID,
+			PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
+			PI.IMG_AT AS IMG_AT
 		FROM
-		PRODUCT P
+			PRODUCT P
 		LEFT JOIN
-		PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-		ORDER BY P.PRODUCT_AT DESC
-		LIMIT 12
+			PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+		ORDER BY 
+			P.PRODUCT_AT DESC
+		LIMIT 
+			12
 	</select>
 
-	<!-- 필터링된 최근 상품 목록 가져오기 -->
-	<!-- <select id="getRecentProductsFiltered"
-		resultMap="ProductResultMap" parameterType="map">
-		SELECT
-		P.PRODUCT_ID AS productId,
-		P.TITLE AS title,
-		P.PRICE AS price,
-		P.QTY AS qty,
-		P.DESCRIPTION AS description,
-		PI.IMG_UUID AS imgUuid,
-		PI.IMG_ORIGINAL_NAME AS imgOriginalName,
-		PI.IMG_AT AS imgAt
-		FROM
-		PRODUCT P
-		LEFT JOIN
-		PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-		<where>
-			<if test="minPrice != null">
-				AND P.PRICE &gt;= #{minPrice}
-			</if>
-			<if test="maxPrice != null">
-				AND P.PRICE &lt;= #{maxPrice}
-			</if>
-			<if test="category != null">
-				AND P.PRODUCT_CATEGORY = #{category}
-			</if>
-		</where>
-		ORDER BY P.PRODUCT_AT DESC
-		LIMIT 12
-	</select> -->
 
+	<select id="getFilteredProducts" resultMap="ProductResultMap" parameterType="map">
+    SELECT
+        P.PRODUCT_ID AS PRODUCT_ID,
+        P.TITLE AS TITLE,
+        P.PRICE AS PRICE,
+        P.QTY AS QTY,
+        P.DESCRIPTION AS DESCRIPTION,
+        PI.IMG_UUID AS IMG_UUID,
+        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
+        PI.IMG_AT AS IMG_AT
+    FROM
+        PRODUCT P
+    LEFT JOIN
+        PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+	    <where>
+	        <if test="category != null and category != ''">
+	            AND P.PRODUCT_CATEGORY = #{category}
+	        </if>
+	    </where>
+	    ORDER BY P.PRODUCT_AT DESC
+	    LIMIT 12
+	</select>
 </mapper>

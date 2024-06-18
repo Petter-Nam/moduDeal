@@ -1,6 +1,7 @@
 package com.application.moduDeal.product.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,11 +31,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDTO> getRecentProducts() {
+	public List<Map<String,Object>> getRecentProducts() {
 		return productDAO.getRecentProducts();
 	}
 
-//	public List<ProductDTO> getRecentProductsFiltered(Integer minPrice, Integer maxPrice, String category) {
-//	    return productDAO.getRecentProductsFiltered(minPrice, maxPrice, category);
-//	}
+	@Override
+	public List<Map<String, Object>> filterProducts(String category) {
+	    return productDAO.getFilteredProducts(category);
+	}
 }
