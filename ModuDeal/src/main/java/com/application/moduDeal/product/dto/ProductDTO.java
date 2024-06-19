@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ProductDTO {
 
-	private int productId;
+    private int productId;
     private String title;
     private String description;
     private int qty;
@@ -19,3 +19,4 @@ public class ProductDTO {
     private List<ProductImgDTO> productImages;
 
 }
+

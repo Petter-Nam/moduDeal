@@ -11,9 +11,14 @@ import com.application.moduDeal.product.dto.ProductImgDTO;
 @Mapper
 public interface ProductDAO {
 	public int saveProduct(ProductDTO productDTO);
+	
     public void saveProductImages(List<ProductImgDTO> productImgDTOList);
-    public List<ProductDTO> getProductDetails(@Param("productId") int productId);
+    
+    public ProductDTO getProductDetails(int productId);
+    
+    public List<ProductImgDTO> getProductImages(@Param("productId") int productId);
+    
     public List<Map<String, Object>> getRecentProducts();
-    public List<Map<String, Object>> getFilteredProducts(@Param("category") String category);
+//    public List<Map<String, Object>> getFilteredProducts(@Param("category") String category);
 
 }

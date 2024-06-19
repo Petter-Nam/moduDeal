@@ -92,14 +92,14 @@ public class ProductController {
 
     @GetMapping("/category")
     public String getCategoryPage(Model model) {
-    	
-    	List<Map<String,Object>> recentProducts = productService.getRecentProducts();
- 
-    	System.out.println(recentProducts);
+        List<Map<String,Object>> recentProducts = productService.getRecentProducts();
+
+        System.out.println(recentProducts); // 디버깅용 출력
         model.addAttribute("recentProducts", recentProducts);
 
         return "/moduDeal/category";
     }
+
     
     @GetMapping("/thumbnails")
     @ResponseBody
@@ -109,12 +109,21 @@ public class ProductController {
         return new UrlResource("file:" + fileRepoPath + fileName);
     }
 
-    @GetMapping("/filterProducts")
-    public String filterProducts(@RequestParam(required = false) String category,
-                                 Model model) {
-        List<Map<String, Object>> filteredProducts = productService.filterProducts(category);
-        model.addAttribute("recentProducts", filteredProducts);
-        return "/moduDeal/category";
+//    @GetMapping("/filterProducts")
+//    public String filterProducts(@RequestParam(required = false) String category,
+//                                 Model model) {
+//        List<Map<String, Object>> filteredProducts = productService.filterProducts(category);
+//        model.addAttribute("recentProducts", filteredProducts);
+//        return "/moduDeal/category";
+//    }
+//    
+    @GetMapping("/productInfo")
+    public String productInfo(@RequestParam("productId") int productId, Model model) {
+        ProductDTO productDTO = productService.getProductDetails(productId);
+        List<ProductImgDTO> productImages = productService.getProductImages(productId); // Get all images for this product
+        model.addAttribute("productDTO", productDTO);
+        model.addAttribute("productImages", productImages); // Pass images to view
+        return "moduDeal/productInfo";
     }
 
 }

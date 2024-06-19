@@ -43,13 +43,54 @@
 			)
 		</foreach>
 	</insert>
+	
+<!-- 		<select id="getProductDetails" parameterType="int" resultType="hashmap">
+		    SELECT
+		        P.PRODUCT_ID AS PRODUCT_ID,
+		        P.TITLE AS TITLE,
+		        P.PRICE AS PRICE,
+		        P.QTY AS QTY,
+		        P.DESCRIPTION AS DESCRIPTION,
+		        PI.IMG_UUID AS IMG_UUID,
+		        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
+		        PI.IMG_AT AS IMG_AT
+		    FROM
+		        PRODUCT P
+		    LEFT JOIN
+		        PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+		    WHERE
+		        P.PRODUCT_ID = #{productId}
+		</select> -->
 
+	<select id="getProductDetails" parameterType="int" resultType="ProductDTO">
+		SELECT		
+				PRODUCT_ID,
+		        TITLE,
+		        PRICE,
+		        QTY,
+		        DESCRIPTION,
+		        PRODUCT_CATEGORY
+		FROM
+				PRODUCT
+		WHERE 
+				PRODUCT_ID = #{productId}
+	</select>
+	
+	<select id="getProductImages" parameterType="int" resultType="ProductImgDTO">
+	    SELECT 
+	    		IMG_UUID, IMG_ORIGINAL_NAME, IMG_AT, PRODUCT_ID
+	    FROM 
+	    		PRODUCT_IMG
+	    WHERE 
+	    		PRODUCT_ID = #{productId}
+	</select>
 
 	<!-- 상품 결과 매핑 -->
 	<resultMap id="ProductResultMap" type="hashmap">
 	    <result property="productId" column="PRODUCT_ID" />
 	    <result property="title" column="TITLE" />
 	    <result property="qty" column="QTY" />
+	    <result property="description" column="DESCRIPTION" />
 	    <result property="price" column="PRICE" />
 	    <result property="imgUuid" column="IMG_UUID" />
 	    <result property="imgOriginalName" column="IMG_ORIGINAL_NAME" />
@@ -58,24 +99,33 @@
 	</resultMap>
 	
 	<!-- 최근 상품 목록 가져오기 -->
-	<select id="getRecentProducts" resultMap="ProductResultMap">
-		SELECT
-			P.PRODUCT_ID AS PRODUCT_ID,
-			P.TITLE AS TITLE,
-			P.PRICE AS PRICE,
-			P.QTY AS QTY,
-			P.DESCRIPTION AS DESCRIPTION,
-			PI.IMG_UUID AS IMG_UUID,
-			PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
-			PI.IMG_AT AS IMG_AT
-		FROM
-			PRODUCT P
-		LEFT JOIN
-			PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-		ORDER BY 
-			P.PRODUCT_AT DESC
-		LIMIT 
-			12
+	<select id="getRecentProducts" resultType="hashmap">
+	    SELECT
+	        P.PRODUCT_ID AS PRODUCT_ID,
+	        P.TITLE AS TITLE,
+	        P.PRICE AS PRICE,
+	        P.QTY AS QTY,
+	        P.DESCRIPTION AS DESCRIPTION,
+	        (
+	            SELECT IMG_UUID 
+	            FROM PRODUCT_IMG 
+	            WHERE PRODUCT_ID = P.PRODUCT_ID 
+	            ORDER BY IMG_AT ASC 
+	            LIMIT 1
+	        ) AS IMG_UUID,
+	        (
+	            SELECT IMG_ORIGINAL_NAME 
+	            FROM PRODUCT_IMG 
+	            WHERE PRODUCT_ID = P.PRODUCT_ID 
+	            ORDER BY IMG_AT ASC 
+	            LIMIT 1
+	        ) AS IMG_ORIGINAL_NAME,
+	        P.PRODUCT_AT AS PRODUCT_AT
+	    FROM
+	        PRODUCT P
+	    ORDER BY 
+	        P.PRODUCT_AT DESC
+	    LIMIT 12
 	</select>
 
 
