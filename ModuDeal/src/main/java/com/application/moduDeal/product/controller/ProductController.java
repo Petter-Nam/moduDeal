@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.application.moduDeal.product.dto.ProductDTO;
 import com.application.moduDeal.product.dto.ProductImgDTO;
 import com.application.moduDeal.product.service.ProductService;
+import com.application.moduDeal.review.service.ReviewService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +39,10 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    
+    
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/product")
     public String product(HttpServletRequest request) {
@@ -94,7 +99,6 @@ public class ProductController {
     public String getCategoryPage(Model model) {
         List<Map<String,Object>> recentProducts = productService.getRecentProducts();
 
-        System.out.println(recentProducts); // 디버깅용 출력
         model.addAttribute("recentProducts", recentProducts);
 
         return "/moduDeal/category";
@@ -117,13 +121,6 @@ public class ProductController {
 //        return "/moduDeal/category";
 //    }
 //    
-    @GetMapping("/productInfo")
-    public String productInfo(@RequestParam("productId") int productId, Model model) {
-        ProductDTO productDTO = productService.getProductDetails(productId);
-        List<ProductImgDTO> productImages = productService.getProductImages(productId); // Get all images for this product
-        model.addAttribute("productDTO", productDTO);
-        model.addAttribute("productImages", productImages); // Pass images to view
-        return "moduDeal/productInfo";
-    }
+
 
 }

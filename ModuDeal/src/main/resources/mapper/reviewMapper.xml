@@ -1,0 +1,33 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.moduDeal.review.dao.ReviewDAO">
+
+	<insert id="regitReview" parameterType="ReviewDTO">
+	    INSERT INTO REVIEW(
+	        REVIEW_ID,
+	        USER_ID,
+	        PRODUCT_ID,
+	        REVIEW,
+	        REVIEW_DATE
+	    )
+	    VALUES(
+	        #{reviewId},
+	        #{userId},
+	        #{productId},
+	        #{review},
+	        NOW()
+	    )
+	</insert>
+	
+	<select id="reviewDetail" parameterType="int" resultType="ReviewDTO">
+	    SELECT 
+		        REVIEW_ID,
+		        USER_ID,
+		        PRODUCT_ID,
+		        REVIEW,
+		        REVIEW_DATE
+	    FROM 
+	       	 	REVIEW 
+	    WHERE 
+	        	PRODUCT_ID = #{productId}
+	</select>
+</mapper>
