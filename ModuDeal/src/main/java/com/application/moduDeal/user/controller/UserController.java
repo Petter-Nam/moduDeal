@@ -1,5 +1,8 @@
 package com.application.moduDeal.user.controller;
 
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import com.application.moduDeal.user.dto.UserDTO;
 import com.application.moduDeal.user.service.UserService;
@@ -27,8 +31,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
-
+	
 	@GetMapping("/login") // 로그인 화면을 부르는 코드입니다.
 	public String login() {
 		return "moduDeal/login";

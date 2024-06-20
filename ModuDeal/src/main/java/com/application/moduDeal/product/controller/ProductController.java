@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.application.moduDeal.product.dto.ProductDTO;
 import com.application.moduDeal.product.dto.ProductImgDTO;
 import com.application.moduDeal.product.service.ProductService;
-import com.application.moduDeal.review.service.ReviewService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -39,10 +38,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-    
-    
-    @Autowired
-    private ReviewService reviewService;
 
     @GetMapping("/product")
     public String product(HttpServletRequest request) {

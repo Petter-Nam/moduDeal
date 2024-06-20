@@ -61,7 +61,7 @@
 						        <div th:each="product : ${recentProducts}" class="col-lg-4 col-md-6">
 						            <div class="single-product">
 						                <div class="product-img">
-						                    <img class="card-img" th:src="@{/board/thumbnails(fileName=${product['IMG_UUID']})}" alt="상품 이미지" />
+						                    <img class="card-img" th:src="@{/board/thumbnails(fileName=${product['IMG_UUID']})}" alt="상품 이미지" width="200" height="300"/>
 						                    <div class="p_icon">
 						                        <a href="#"><i class="ti-eye"></i></a>
 						                        <a href="#"><i class="ti-heart"></i></a>
