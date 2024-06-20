@@ -22,6 +22,6 @@ public class ModuDealMainController {
 
         model.addAttribute("recentProducts", recentProducts);
 
-        return "/moduDeal/main";
+        return "moduDeal/main";
     }
 }
