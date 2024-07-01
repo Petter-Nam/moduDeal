@@ -194,13 +194,13 @@
 	</select>
 	
 	<update id="updateProduct" parameterType="ProductDTO">
-    UPDATE PRODUCT
-    SET TITLE = #{title},
-        DESCRIPTION = #{description},
-        QTY = #{qty},
-        PRICE = #{price},
-        PRODUCT_CATEGORY = #{productCategory}
-    WHERE PRODUCT_ID = #{productId}
+	    UPDATE PRODUCT
+	    SET TITLE = #{title},
+	        DESCRIPTION = #{description},
+	        QTY = #{qty},
+	        PRICE = #{price},
+	        PRODUCT_CATEGORY = #{productCategory}
+	    WHERE PRODUCT_ID = #{productId}
 	</update>
 	
 	<delete id="deleteProductImageById" parameterType="int">
@@ -208,9 +208,13 @@
 	    WHERE IMG_ID = #{imageId}
 	</delete>
 	
-	<delete id="deleteProductById" parameterType="long">
-    DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
+	<delete id="deleteProductById" parameterType="int">
+	    DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId};
 	</delete>
+	
+<!-- 	<delete id="deleteProductImageById" parameterType="int">
+	  DELETE FROM CART WHERE PRODUCT_ID = #{productId};
+	</delete> -->
 	
 	<select id="getTopLikedProducts" resultType="hashmap">
         SELECT

@@ -1,6 +1,7 @@
 package com.application.moduDeal.chat.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,5 +13,5 @@ public interface ChatDAO {
     public List<ChatDTO> selectMessagesByProductId(int productId);
     public String getSellerEmail(String receiverId);
     public String getSellerIdByProductId(int productId);
-    public void activateChat(int productId, String receiverId);
+    public void activateChat(Map<String, Object> activeMap);
 }

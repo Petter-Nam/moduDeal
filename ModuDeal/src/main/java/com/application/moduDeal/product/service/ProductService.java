@@ -27,7 +27,7 @@ public interface ProductService {
 
     public void deleteProductImageById(Long imageId);
     
-    public void deleteProductById(Long productId);
+    public void deleteProductById(int productId);
     
     public List<Map<String, Object>> getTopLikedProducts();
 

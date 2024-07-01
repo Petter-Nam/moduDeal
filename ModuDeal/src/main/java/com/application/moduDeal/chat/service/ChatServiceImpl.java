@@ -1,6 +1,7 @@
 package com.application.moduDeal.chat.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void sendMessage(ChatDTO chatDTO) {
+        // 여기서 senderId와 receiverId를 사용하여 메시지를 저장합니다.
         chatDAO.insertMessage(chatDTO);
     }
 
@@ -35,8 +37,8 @@ public class ChatServiceImpl implements ChatService {
     }
     
     @Override
-    public void activateChat(int productId, String receiverId) {
+    public void activateChat(Map<String, Object> activeMap) {
         // 채팅 활성화 로직을 구현합니다. 예를 들어 데이터베이스에 활성화 상태를 업데이트합니다.
-        chatDAO.activateChat(productId, receiverId);
+        chatDAO.activateChat(activeMap);
     }
 }

@@ -49,5 +49,9 @@
 	<delete id="deleteCartItem">
    		 DELETE FROM CART WHERE CART_ID = #{cartId}
 	</delete>
+	
+	<delete id="deleteFromCartByProductId" parameterType="long">
+    	DELETE FROM cart WHERE PRODUCT_ID = #{productId}
+	</delete>
 
 </mapper>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Chat Room</title>
@@ -80,6 +80,11 @@
             resize: none;
         }
     </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var currentUserId = /*[[${session.userId}]]*/ 'defaultUserId';
+        /*]]>*/
+    </script>
 </head>
 <body>
     <div class="chat_wrap">
@@ -99,70 +104,84 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-<script>
-    var stompClient = null;
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var stompClient = null;
 
-    function connect(productId, userId, receiverId) {
-        var socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            console.log('연결됨: ' + frame);
-            stompClient.subscribe('/topic/messages', function (response) {
-                var message = JSON.parse(response.body);
-                console.log('받은 메시지:', message);
-                displayMessage(message);
+        function connect(productId, senderId, receiverId) {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/messages', function (response) {
+                    var message = JSON.parse(response.body);
+                    console.log('Received message:', message);
+                    displayMessage(message);
+                });
             });
-        });
 
-        document.getElementById("sendMessage").addEventListener("click", function () {
-            sendMessage(productId, userId, receiverId);
-        });
-    }
+            document.getElementById("sendMessage").addEventListener("click", function () {
+                sendMessage(productId, senderId, receiverId);
+            });
 
-    function sendMessage(productId, userId, receiverId) {
-        var messageContent = document.getElementById("message").value;
-        if (messageContent && stompClient) {
-            if (!receiverId) {
-                alert("수신자 ID가 설정되지 않았습니다!");
-                return;
-            }
-            var chatMessage = {
-                senderId: userId,
-                receiverId: receiverId,
-                productId: productId,
-                message: messageContent,
-                sendTime: new Date()
-            };
-            stompClient.send("/app/chat/send", {}, JSON.stringify(chatMessage));
-            document.getElementById("message").value = '';
+            document.getElementById("message").addEventListener("keypress", function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage(productId, senderId, receiverId);
+                }
+            });
         }
-    }
 
-    function displayMessage(message) {
-        var messageList = document.getElementById("messageList");
-        var li = document.createElement("li");
-        var divSender = document.createElement("div");
-        var divMessage = document.createElement("div");
+        function sendMessage(productId, senderId, receiverId) {
+            var messageContent = document.getElementById("message").value;
+            if (messageContent && stompClient) {
+                if (!receiverId) {
+                    alert("수신자 ID가 설정되지 않았습니다!");
+                    return;
+                }
+                var chatMessage = {
+                    senderId: senderId,
+                    receiverId: receiverId,
+                    productId: productId,
+                    message: messageContent,
+                    sendTime: new Date()
+                };
+                stompClient.send("/app/chat/send", {}, JSON.stringify(chatMessage));
+                document.getElementById("message").value = '';
+            }
+        }
 
-        divSender.className = "sender";
-        divSender.textContent = message.senderId;
-        divMessage.className = "message";
-        divMessage.textContent = message.message;
+        function displayMessage(message) {
+            var messageList = document.getElementById("messageList");
+            var li = document.createElement("li");
+            var divSender = document.createElement("div");
+            var divMessage = document.createElement("div");
 
-        li.appendChild(divSender);
-        li.appendChild(divMessage);
+            divSender.className = "sender";
+            divSender.textContent = message.senderId;
+            divMessage.className = "message";
+            divMessage.textContent = message.message;
 
-        messageList.appendChild(li);
-    }
+            if (message.senderId === currentUserId) {
+                li.className = "right";
+            } else {
+                li.className = "left";
+            }
 
-    window.onload = function () {
-        const params = new URLSearchParams(window.location.search);
-        const productId = params.get('productId');
-        const userId = params.get('userId');
-        const receiverId = params.get('receiverId');
-        connect(productId, userId, receiverId);
-    };
-</script>
+            li.appendChild(divSender);
+            li.appendChild(divMessage);
 
+            messageList.appendChild(li);
+        }
+
+        window.onload = function () {
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('productId');
+            const senderId = /*[[${session.userId}]]*/ 'defaultSenderId';
+            const receiverId = params.get('receiverId');
+            connect(productId, senderId, receiverId);
+        };
+        /*]]>*/
+    </script>
 </body>
 </html>

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.application.moduDeal.product.dao.ProductDAO;
 import com.application.moduDeal.product.dto.ProductDTO;
 import com.application.moduDeal.product.dto.ProductImgDTO;
@@ -75,8 +77,8 @@ public class ProductServiceImpl implements ProductService {
         productDAO.deleteProductImageById(imageId.intValue());
     }
     
-    @Override
-    public void deleteProductById(Long productId) {
+    @Transactional
+    public void deleteProductById(int productId) {
         productDAO.deleteProductById(productId);
     }
     

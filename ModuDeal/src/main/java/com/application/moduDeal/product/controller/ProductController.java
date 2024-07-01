@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.application.moduDeal.cart.service.CartService;
 import com.application.moduDeal.product.dto.ProductDTO;
 import com.application.moduDeal.product.dto.ProductImgDTO;
 import com.application.moduDeal.product.service.ProductService;
@@ -41,6 +42,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    
+    @Autowired
+    private CartService cartService;
     
     @Autowired
     private ProductLikeService productLikeService;
@@ -175,7 +179,8 @@ public class ProductController {
     
     
     @PostMapping("/deleteProduct")
-    public String deleteProduct(@RequestParam("productId") Long productId) {
+    public String deleteProduct(@RequestParam("productId") int productId) {
+    	System.out.println(productId + "auhdfasjdfjasdlfjasidfjasiodjfioasjdfioasjdfioasjdfioasjdfoiasjdfoiajsdiofjasodifjasoidjfoiasdjfoasijfoiasdjfoiasjdfioajdfoisjdf");
         productService.deleteProductById(productId);
         return "redirect:/cart/cartList"; // 삭제 후 상품 목록 페이지로 리다이렉트
     }

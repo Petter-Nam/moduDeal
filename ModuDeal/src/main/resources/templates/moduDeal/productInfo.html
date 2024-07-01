@@ -119,7 +119,7 @@
                                 </button>
                             </div>
                             <div class="card_area">
-                                <a class="main_btn" th:href="@{'/chat?productId=' + ${productDTO.productId} + '&userId=' + ${productDTO.userId}}">채팅하기</a>
+                                <a class="main_btn" th:href="@{'/chat?productId=' + ${productDTO.productId} + '&receiverId=' + ${productDTO.userId} + '&senderId=' + ${session.userId}}" onclick="startChat('${productDTO.productId}', '${productDTO.userId}', '${session.userId}')">채팅하기</a>
 
                                 <a class="icon_btn" href="#">
                                     <i class="lnr lnr-diamond"></i>
@@ -213,7 +213,7 @@
 	var stompClient = null;
 
 	function connect() {
-	    var socket = new SockJS('/ws');
+	    var socket = new SockJS('/ws'); // WebSocket 서버 주소
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function (frame) {
 	        console.log('Connected: ' + frame);
@@ -222,24 +222,27 @@
 	            // 받은 메시지를 화면에 표시하는 로직 추가
 	            console.log('Received message:', message);
 	        });
+	    }, function (error) {
+	        console.error('WebSocket connection error: ' + error);
 	    });
 	}
 
-	function startChat(productId, sellerId) {
-	    connect(); // WebSocket 연결
+	function startChat(productId, sellerId, senderId) {
+	    if (!stompClient) {
+	        connect(); // WebSocket 연결
+	    }
 
 	    var message = {
-	        senderId: '${session.userId}', // 로그인된 사용자의 ID
-	        receiverId: sellerId, // 상품 판매자의 ID
-	        productId: productId, // 상품 ID
-	        message: '안녕하세요, 채팅을 시작합니다!', // 사용자가 입력한 메시지
-	        sendTime: new Date() // 현재 시간
+	        senderId: senderId,
+	        receiverId: receiverId,
+	        productId: productId,
+	        message: '안녕하세요, 채팅을 시작합니다!',
+	        sendTime: new Date().toISOString()
 	    };
 
 	    // WebSocket을 통해 서버로 메시지 전송
-	    stompClient.send('/app/chat', {}, JSON.stringify(message));
+	    stompClient.send('/app/chat/send', {}, JSON.stringify(message));
 	}
-
 	</script>
 </body>
 

@@ -1,6 +1,7 @@
 package com.application.moduDeal.chat.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.application.moduDeal.chat.dto.ChatDTO;
 
@@ -13,5 +14,5 @@ public interface ChatService {
 
 	public String fetchReceiverId(int productId);
 	
-	public void activateChat(int productId, String receiverId);
+	public void activateChat(Map<String, Object> activeMap);
 }

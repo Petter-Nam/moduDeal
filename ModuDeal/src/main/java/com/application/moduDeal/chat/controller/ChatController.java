@@ -3,10 +3,13 @@ package com.application.moduDeal.chat.controller;
 import com.application.moduDeal.chat.dto.ChatDTO;
 import com.application.moduDeal.chat.service.ChatService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,40 +31,62 @@ public class ChatController {
     private EmailService emailService;
 
     @GetMapping("/chat")
-    public String chatPage(@RequestParam("productId") int productId, @RequestParam("userId") String userId, Model model) {
+    public String chatPage(
+        @RequestParam("productId") int productId,
+        @RequestParam("receiverId") String receiverId,
+        @RequestParam("senderId") String senderId,
+        Model model
+    ) {
         model.addAttribute("productId", productId);
-        model.addAttribute("userId", userId);
-        String receiverId = chatService.fetchReceiverId(productId);
         model.addAttribute("receiverId", receiverId);
-        
-        // 구매자가 채팅을 시작하면 판매자에게 이메일을 보냅니다.
+        model.addAttribute("senderId", senderId);
+
+        // 채팅 링크를 생성
+        String chatLink = "http://localhost/chat?productId=" + productId
+            + "&receiverId=" + receiverId
+            + "&senderId=" + senderId;
+
+        // 이메일을 통해 채팅 알림을 보냅니다
         String sellerEmail = chatService.getSellerEmail(receiverId);
-        String chatLink = "http://localhost/chat/activate?productId=" + productId + "&receiverId=" + receiverId;
-        emailService.sendChatNotification(sellerEmail, userId, chatLink);
-        
-        return "/moduDeal/chat";
+        emailService.sendChatNotification(sellerEmail, senderId, chatLink);
+
+        return "/moduDeal/chat"; // chat.html 템플릿으로 직접 이동
     }
+
+
     
     @GetMapping("/chat/activate")
-    @ResponseBody
-    public String activateChat(@RequestParam("productId") int productId, @RequestParam("receiverId") String receiverId) {
+    public String activateChat(
+        @RequestParam("productId") int productId, 
+        @RequestParam("receiverId") String receiverId,
+        @RequestParam("senderId") String senderId // 추가된 부분
+    ) {
         // 채팅 활성화 로직을 구현합니다.
-        chatService.activateChat(productId, receiverId);
-        return "채팅이 활성화되었습니다. 이제 채팅을 시작할 수 있습니다.";
-    }
-    
-    @MessageMapping("/chat")
-    public void sendMessage(ChatDTO chatDTO) {
-        if (chatDTO.getReceiverId() == null) {
-            throw new IllegalArgumentException("수신자 ID는 필수입니다.");
-        }
-        chatService.sendMessage(chatDTO);
-        messagingTemplate.convertAndSend("/topic/messages", chatDTO);
+        Map<String, Object> activeMap = new HashMap<>();
+        activeMap.put("productId", productId);
+        activeMap.put("receiverId", receiverId);
+        activeMap.put("senderId", senderId); // 추가된 부분
 
-        // 이메일로 알림 보내기
-        String sellerEmail = chatService.getSellerEmail(chatDTO.getReceiverId());
-        emailService.sendChatNotification(sellerEmail, chatDTO.getSenderId(), chatDTO.getMessage());
+        chatService.activateChat(activeMap);
+
+        return "/moduDeal/chat"; // 채팅 페이지로 이동
     }
+
+    
+    @MessageMapping("/chat/send")
+    @SendTo("/topic/messages")
+    public ChatDTO sendMessage(ChatDTO chatDTO) {
+        if (chatDTO.getReceiverId() == null || chatDTO.getSenderId() == null) {
+            throw new IllegalArgumentException("송신자 ID와 수신자 ID는 필수입니다.");
+        }
+
+        chatService.sendMessage(chatDTO);
+
+
+
+        return chatDTO;
+    }
+
 
     @GetMapping("/chat/messages/{productId}")
     @ResponseBody
