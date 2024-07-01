@@ -1,140 +1,142 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{moduDeal/index.html}">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{moduDeal/index.html}">
+
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-<title>Eiser ecommerce</title>
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
-<link rel="stylesheet" th:href="@{/vendors/linericon/style.css}" />
-<link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
-<link rel="stylesheet" th:href="@{/css/themify-icons.css}" />
-<link rel="stylesheet"
-	th:href="@{/vendors/owl-carousel/owl.carousel.min.css}" />
-<link rel="stylesheet" th:href="@{/vendors/lightbox/simpleLightbox.css}" />
-<link rel="stylesheet"
-	th:href="@{/vendors/nice-select/css/nice-select.css}" />
-<link rel="stylesheet" th:href="@{/vendors/animate-css/animate.css}" />
-<link rel="stylesheet" th:href="@{/vendors/jquery-ui/jquery-ui.css}" />
-<!-- main css -->
-<link rel="stylesheet" th:href="@{/css/style.css}" />
-<link rel="stylesheet" th:href="@{/css/responsive.css}" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Eiser ecommerce</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/linericon/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/themify-icons.css}" />
+    <link rel="stylesheet"
+        th:href="@{/vendors/owl-carousel/owl.carousel.min.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/lightbox/simpleLightbox.css}" />
+    <link rel="stylesheet"
+        th:href="@{/vendors/nice-select/css/nice-select.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/animate-css/animate.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/jquery-ui/jquery-ui.css}" />
+    <!-- main css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/responsive.css}" />
 </head>
 
 <body>
-	<!--================Header Menu Area =================-->
-	<div layout:fragment="content">
+    <!--================Header Menu Area =================-->
+    <div layout:fragment="content">
 
-		<!--================Home Banner Area =================-->
-		<section class="banner_area">
-			<div class="banner_inner d-flex align-items-center">
-				<div class="container">
-					<div
-						class="banner_content d-md-flex justify-content-between align-items-center">
-						<div class="mb-3 mb-md-0">
-							<h2>상품 정보</h2>
-							<p>상품 정보를 확인하셔요</p>
-						</div>
-						<div class="page_link">
-							<a th:href="@{/}">메인</a> <a th:href="@{/board/productInfo}">상품 정보
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--================End Home Banner Area =================-->
+        <!--================Home Banner Area =================-->
+        <section class="banner_area">
+            <div class="banner_inner d-flex align-items-center">
+                <div class="container">
+                    <div
+                        class="banner_content d-md-flex justify-content-between align-items-center">
+                        <div class="mb-3 mb-md-0">
+                            <h2>상품 정보</h2>
+                            <p>상품 정보를 확인하셔요</p>
+                        </div>
+                        <div class="page_link">
+                            <a th:href="@{/}">메인</a> <a th:href="@{/board/productInfo}">상품 정보
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--================End Home Banner Area =================-->
 
-		<!--================Single Product Area =================-->
-		<div class="product_image_area">
-		    <div class="container">
-		        <div class="row s_product_inner">
-		            <div class="col-lg-6">
-		                <div class="s_product_img">
-		                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-		                        <!-- Carousel Indicators -->
-								<ol class="carousel-indicators">
-								    <th:block th:each="image, stat : ${productImages}">
-								        <li th:data-target="'#carouselExampleIndicators'"
-								            th:data-slide-to="${stat.index}"
-								            th:class="${stat.index == 0} ? 'active' : ''"
-								            style="width: 60px; height: 60px;">
-								            <img th:src="@{/board/thumbnails(fileName=${image.imgUuid})}"
-								                 alt="Product Image"
-								                 style="width: 100%; height: 100%; object-fit: cover;" />
-								        </li>
-								    </th:block>
-								</ol>
-		                        
-		                        <!-- Carousel Inner -->
-		                        <div class="carousel-inner">
-		                            <!-- Thymeleaf iteration for carousel items -->
-		                            <th:block th:each="image, stat : ${productImages}">
-		                                <div th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-		                                    <img class="d-block w-100"
-		                                        th:src="@{/board/thumbnails(fileName=${image.imgUuid})}"
-		                                        alt="Product Image" />
-		                                </div>
-		                            </th:block>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		            <div class="col-lg-5 offset-lg-1">
-		                <div class="s_product_text">
-		                    <h3 th:text="${productDTO.title}"></h3>
-		                    <h2 th:text="${productDTO.price}"></h2>
-		                    <ul class="list">
-		                        <li>
-		                            <a class="active" href="#" th:text="${productDTO.productCategory}">
-		                                <span>카테고리</span> : Household</a>
-		                        </li>
-		                        <li>
-		                            <a href="#">
-		                                <span>Availability</span> : In Stock</a>
-		                        </li>
-		                    </ul>
-		                    <p th:text="${productDTO.description}">
+        <!--================Single Product Area =================-->
+        <div class="product_image_area">
+            <div class="container">
+                <div class="row s_product_inner">
+                    <div class="col-lg-6">
+                        <div class="s_product_img">
+                            <div id="carouselExampleIndicators" class="carousel slide"
+                                data-ride="carousel">
+                                <!-- Carousel Indicators -->
+                                <ol class="carousel-indicators">
+                                    <th:block th:each="image, stat : ${productImages}">
+                                        <li th:data-target="'#carouselExampleIndicators'"
+                                            th:data-slide-to="${stat.index}"
+                                            th:class="${stat.index == 0} ? 'active' : ''"
+                                            style="width: 60px; height: 60px;">
+                                            <img th:src="@{/board/thumbnails(fileName=${image.imgUuid})}"
+                                                alt="Product Image"
+                                                style="width: 100%; height: 100%; object-fit: cover;" />
+                                        </li>
+                                    </th:block>
+                                </ol>
 
-		                    </p>
-		                    <div class="product_count">
-		                        <label for="sst">Quantity:</label>
-		                        <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
-		                            class="input-text qty" />
-		                        <button
-		                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-		                            class="increase items-count" type="button">
-		                            <i class="lnr lnr-chevron-up"></i>
-		                        </button>
-		                        <button
-		                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) && sst > 0 ) result.value--;return false;"
-		                            class="reduced items-count" type="button">
-		                            <i class="lnr lnr-chevron-down"></i>
-		                        </button>
-		                    </div>
-		                    <div class="card_area">
-		                        <a class="main_btn" href="#">채팅하기</a>
-		                        <a class="icon_btn" href="#">
-		                            <i class="lnr lnr-diamond"></i>
-		                        </a>
-		                        <a class="icon_btn" href="#">
-		                            <i class="lnr lnr-heart"></i>
-		                        </a>
-		                    </div>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
-		</div>
+                                <!-- Carousel Inner -->
+                                <div class="carousel-inner">
+                                    <!-- Thymeleaf iteration for carousel items -->
+                                    <th:block th:each="image, stat : ${productImages}">
+                                        <div th:class="${stat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                                            <img class="d-block w-100"
+                                                th:src="@{/board/thumbnails(fileName=${image.imgUuid})}"
+                                                alt="Product Image" />
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 offset-lg-1">
+                        <div class="s_product_text">
+                            <h3 th:text="${productDTO.title}"></h3>
+                            <h2 th:text="${#numbers.formatInteger(productDTO.price,  1 , 'COMMA')}"></h2>
+                            <ul class="list">
+                                <li>
+                                    <a class="active" href="#" th:text="${productDTO.productCategory}">
+                                        <span>카테고리</span> : Household</a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>Availability</span> : In Stock</a>
+                                </li>
+                            </ul>
+                            <p th:text="${productDTO.description}">
 
-	<!--================End Single Product Area =================-->
+                            </p>
+                            <div class="product_count">
+                                <label for="sst">Quantity:</label>
+                                <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
+                                    class="input-text qty" />
+                                <button
+                                    onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                                    class="increase items-count" type="button">
+                                    <i class="lnr lnr-chevron-up"></i>
+                                </button>
+                                <button
+                                    onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) && sst > 0 ) result.value--;return false;"
+                                    class="reduced items-count" type="button">
+                                    <i class="lnr lnr-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div class="card_area">
+                                <a class="main_btn" th:href="@{'/chat?productId=' + ${productDTO.productId} + '&userId=' + ${productDTO.userId}}">채팅하기</a>
 
-	<!--================Product Description Area =================-->
-	<section class="product_description_area">
+                                <a class="icon_btn" href="#">
+                                    <i class="lnr lnr-diamond"></i>
+                                </a>
+                                <a class="icon_btn" href="#">
+                                    <i class="lnr lnr-heart"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--================End Single Product Area =================-->
+
+        <!--================Product Description Area =================-->
+        <section class="product_description_area">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -186,26 +188,59 @@
                 </div>
             </div>
         </section>
-	<!--================End Product Description Area =================-->
+        <!--================End Product Description Area =================-->
 
-	</div>
+    </div>
 
-	<!-- Optional JavaScript -->
-	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script th:src="@{/js/jquery-3.6.1.min.js}"></script>
-	<script th:src="@{/js/popper.js}"></script>
-	<script th:src="@{/js/bootstrap.min.js}"></script>
-	<script th:src="@{/js/stellar.js}"></script>
-	<script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
-	<script th:src="@{/vendors/nice-select/js/jquery.nice-select.min.js}"></script>
-	<script th:src="@{/vendors/isotope/imagesloaded.pkgd.min.js}"></script>
-	<script th:src="@{/vendors/isotope/isotope-min.js}"></script>
-	<script th:src="@{/vendors/owl-carousel/owl.carousel.min.js}"></script>
-	<script th:src="@{/js/jquery.ajaxchimp.min.js}"></script>
-	<script th:src="@{/js/mail-script.js}"></script>
-	<script th:src="@{/vendors/jquery-ui/jquery-ui.js}"></script>
-	<script th:src="@{/vendors/counter-up/jquery.waypoints.min.js}"></script>
-	<script th:src="@{/vendors/counter-up/jquery.counterup.js}"></script>
-	<script th:src="@{/js/theme.js}"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+    <script th:src="@{/js/popper.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/stellar.js}"></script>
+    <script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
+    <script th:src="@{/vendors/nice-select/js/jquery.nice-select.min.js}"></script>
+    <script th:src="@{/vendors/isotope/imagesloaded.pkgd.min.js}"></script>
+    <script th:src="@{/vendors/isotope/isotope-min.js}"></script>
+    <script th:src="@{/vendors/owl-carousel/owl.carousel.min.js}"></script>
+    <script th:src="@{/js/jquery.ajaxchimp.min.js}"></script>
+    <script th:src="@{/js/mail-script.js}"></script>
+    <script th:src="@{/vendors/jquery-ui/jquery-ui.js}"></script>
+    <script th:src="@{/vendors/counter-up/jquery.waypoints.min.js}"></script>
+    <script th:src="@{/vendors/counter-up/jquery.counterup.js}"></script>
+    <script th:src="@{/js/theme.js}"></script>
+	<script type="text/javascript">
+	var stompClient = null;
+
+	function connect() {
+	    var socket = new SockJS('/ws');
+	    stompClient = Stomp.over(socket);
+	    stompClient.connect({}, function (frame) {
+	        console.log('Connected: ' + frame);
+	        stompClient.subscribe('/topic/messages', function (response) {
+	            var message = JSON.parse(response.body);
+	            // 받은 메시지를 화면에 표시하는 로직 추가
+	            console.log('Received message:', message);
+	        });
+	    });
+	}
+
+	function startChat(productId, sellerId) {
+	    connect(); // WebSocket 연결
+
+	    var message = {
+	        senderId: '${session.userId}', // 로그인된 사용자의 ID
+	        receiverId: sellerId, // 상품 판매자의 ID
+	        productId: productId, // 상품 ID
+	        message: '안녕하세요, 채팅을 시작합니다!', // 사용자가 입력한 메시지
+	        sendTime: new Date() // 현재 시간
+	    };
+
+	    // WebSocket을 통해 서버로 메시지 전송
+	    stompClient.send('/app/chat', {}, JSON.stringify(message));
+	}
+
+	</script>
 </body>
+
 </html>

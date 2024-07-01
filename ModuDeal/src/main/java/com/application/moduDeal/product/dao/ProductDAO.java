@@ -19,6 +19,15 @@ public interface ProductDAO {
     public List<ProductImgDTO> getProductImages(@Param("productId") int productId);
     
     public List<Map<String, Object>> getRecentProducts();
-//    public List<Map<String, Object>> getFilteredProducts(@Param("category") String category);
+    
+    public List<ProductDTO> getProductsByUserId(String userId);
+    
+    public void updateProduct(ProductDTO product);
+
+    public void deleteProductImageById(int imageId);
+    
+    public void deleteProductById(Long productId);
+    
+    public List<Map<String, Object>> getTopLikedProducts();
 
 }

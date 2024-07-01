@@ -19,4 +19,3 @@ public class ProductDTO {
     private List<ProductImgDTO> productImages;
 
 }
-

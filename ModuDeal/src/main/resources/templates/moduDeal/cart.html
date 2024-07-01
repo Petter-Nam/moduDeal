@@ -1,101 +1,156 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{moduDeal/index.html}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{moduDeal/index.html}">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .cart_area, .product-list {
+            margin-top: 50px;
+        }
+        .product-list img, .cart_area img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
 
-	<div layout:fragment="content">
-		<!--================Home Banner Area =================-->
-		<section class="banner_area">
-			<div class="banner_inner d-flex align-items-center">
-				<div class="container">
-					<div
-						class="banner_content d-md-flex justify-content-between align-items-center">
-						<div class="mb-3 mb-md-0">
-							<h2>카트</h2>
-							<p>이용자의 이력을 확인하세요.</p>
-						</div>
-						<div class="page_link">
-							<a href="/main.html">Home</a> <a href="cart.html">Cart</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--================End Home Banner Area =================-->
-		<!--================Product Description Area =================-->
-		<section class="product_description_area">
-			<div class="container">
-				<ul class="nav nav-tabs" id="myTab" role="tablist">
-					<li class="nav-item"><a class="nav-link" id="home-tab"
-						data-toggle="tab" href="#home" role="tab" aria-controls="home"
-						aria-selected="true">구매중인 상품</a></li>
-					<li class="nav-item"><a class="nav-link" id="profile-tab"
-						data-toggle="tab" href="#profile" role="tab"
-						aria-controls="profile" aria-selected="false">판매중인
-							상품</a></li>
-					<li class="nav-item"><a class="nav-link" id="contact-tab"
-						data-toggle="tab" href="#contact" role="tab"
-						aria-controls="contact" aria-selected="false">찜한 상품</a>
-					</li>
-				</ul>
-				<div class="tab-content" id="myTabContent">
-					<div class="tab-pane fade" id="home" role="tabpanel"
-						aria-labelledby="home-tab">
-						<!-- Cart area -->
-						<section class="cart_area">
-							<div class="container">
-								<div class="cart_inner">
-									<div class="table-responsive">
-										<table class="table">
-											<thead>
-												<tr>
-													<th scope="col">Product</th>
-													<th scope="col">Price</th>
-													<th scope="col">Quantity</th>
-													<th scope="col">Total</th>
-												</tr>
-											</thead>
-											<tbody>
-												<!-- Your cart items here -->
-												<tr>
-													<!-- Cart item 1 -->
-												</tr>
-												<tr>
-													<!-- Cart item 2 -->
-												</tr>
-												<tr>
-													<!-- Cart item 3 -->
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</section>
-						<!-- End Cart area -->
-					</div>
-					<div class="tab-pane fade" id="profile" role="tabpanel"
-						aria-labelledby="profile-tab">
-						<!-- Content for "판매중인 상품" tab goes here -->
-					</div>
-					<div class="tab-pane fade" id="contact" role="tabpanel"
-						aria-labelledby="contact-tab">
-						<!-- Content for "찜한 상품" tab goes here -->
-					</div>
-					<div class="tab-pane fade" id="review" role="tabpanel"
-						aria-labelledby="review-tab">
-						<!-- Content for "선호하는 판매자가 올린 상품" tab goes here -->
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--================End Product Description Area =================-->
-	</div>
+<div layout:fragment="content">
+    <!-- Banner Area -->
+    <section class="banner_area">
+        <div class="banner_inner d-flex align-items-center">
+            <div class="container">
+                <div class="banner_content d-md-flex justify-content-between align-items-center">
+                    <div class="mb-3 mb-md-0">
+                        <h2>카트</h2>
+                        <p>이용자의 이력을 확인하세요.</p>
+                    </div>
+                    <div class="page_link">
+                        <a th:href="@{/}">Home</a> <a th:href="@{/cart/cartList}">Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Menu -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">내 상품 관리</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">판매중인 상품 관리</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Area -->
+    <section class="cart_area">
+        <div class="container">
+            <div class="section-title">카트 목록</div>
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">상품</th>
+                                <th scope="col">가격</th>
+                                <th scope="col">판매 수량</th>
+                                <th scope="col">총 가격</th>
+                                <th scope="col">카트 취소</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cartItem : ${cartItems}">
+                                <td>
+                                    <div class="media">
+                                        <div class="d-flex align-self-center mr-3">
+                                            <img th:src="@{/board/thumbnails(fileName=${cartItem.imgUuid})}" alt="Product Image" class="img-fluid">
+                                        </div>
+                                        <div class="media-body align-self-center">
+                                            <h5><a th:href="@{/review/checkReview(productId=${cartItem.productId})}" th:text="${cartItem.title}"></a></h5>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><h5 th:text="'₩' + ${cartItem.price}"></h5></td>
+                                <td><input type="number" min="1" th:value="${cartItem.qty}" class="form-control" readonly></td>
+                                <td><h5 th:text="'₩' + (${cartItem.price} * ${cartItem.qty})"></h5></td>
+                                <td>
+                                    <form th:action="@{/cart/deleteCartItem}" method="post">
+                                        <input type="hidden" name="cartId" th:value="${cartItem.cartId}">
+                                        <button type="submit" class="btn btn-danger">삭제하기</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product List -->
+	<section class="cart_area product-list">
+	    <div class="container">
+	        <div class="section-title">판매중인 상품 목록</div>
+	        <div class="cart_inner">
+	            <div class="table-responsive">
+	                <table class="table table-striped">
+	                    <thead>
+	                        <tr>
+	                            <th scope="col">상품</th>
+	                            <th scope="col">제목</th>
+	                            <th scope="col">가격</th>
+	                            <th scope="col">수량</th>
+	                            <th scope="col">수정</th>
+	                            <th scope="col">삭제</th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        <tr th:each="product : ${myProducts}">
+	                            <td>
+	                                <img th:if="${product.productImages != null and product.productImages.size() > 0}"
+	                                     th:src="@{/board/thumbnails(fileName=${product.productImages[0].imgUuid})}"
+	                                     alt="Product Image" class="img-fluid">
+	                            </td>
+	                            <td th:text="${product.title}"></td>
+	                            <td th:text="'₩' + ${product.price}"></td>
+	                            <td th:text="${product.qty}"></td>
+	                            <td>
+	                                <a th:href="@{'/board/editProduct?id=' + ${product.productId}}" class="btn btn-primary">수정하기</a>
+	                            </td>
+	                            <td>
+	                                <form th:action="@{'/board/deleteProduct'}" method="post">
+	                                    <input type="hidden" name="productId" th:value="${product.productId}">
+	                                    <button type="submit" class="btn btn-danger">삭제하기</button>
+	                                </form>
+	                            </td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+	</section>
+</div>
+
+<!-- Optional: JavaScript libraries for Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

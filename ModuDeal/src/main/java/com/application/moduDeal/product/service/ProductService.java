@@ -16,6 +16,19 @@ public interface ProductService {
     
     public ProductDTO getProductDetails(int productId);
     
+    public List<ProductDTO> getProductsByUserId(String userId);
+    
     public List<Map<String,Object>> getRecentProducts(); // 최근 상품 목록을 가져오는 메서드 추가
    // public List<Map<String, Object>> filterProducts(String category);
+    
+    public ProductDTO getProductById(Long productId);
+
+    public void updateProduct(ProductDTO product);
+
+    public void deleteProductImageById(Long imageId);
+    
+    public void deleteProductById(Long productId);
+    
+    public List<Map<String, Object>> getTopLikedProducts();
+
 }

@@ -1,8 +1,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.application.moduDeal.cart.dao.CartDAO">
+<mapper namespace="com.application.moduDeal.cart.dao.CartDAO">
+
+	<insert id="addToCart" parameterType="com.application.moduDeal.cart.dto.CartDTO">
+	    INSERT INTO CART (
+	        USER_ID, 
+	        PRODUCT_ID, 
+	        QTY, 
+	        PRICE, 
+	        TITLE, 
+	        IMG_UUID, 
+	        ADDED_AT
+	    ) VALUES (
+	        #{userId}, 
+	        #{productId}, 
+	        #{qty}, 
+	        #{price}, 
+	        #{title}, 
+	        #{imgUuid}, 
+	        CURRENT_TIMESTAMP
+	    )
+	</insert>
+
+	<select id="getCartItemsByUserId" resultType="CartDTO">
+	    SELECT 
+	        C.CART_ID, C.USER_ID, C.PRODUCT_ID, C.QTY, C.TITLE, C.ADDED_AT, 
+	        P.PRICE, PI.IMG_UUID
+	    FROM 
+	        CART C
+	        JOIN PRODUCT P ON C.PRODUCT_ID = P.PRODUCT_ID
+	        LEFT JOIN (
+	            SELECT PRODUCT_ID, IMG_UUID 
+	            FROM PRODUCT_IMG 
+	            LIMIT 1
+	        ) PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+	    WHERE 
+	        C.USER_ID = #{userId}
+	</select>
 	
+	<select id="getCartItemById" resultType="CartDTO"> 
+        SELECT 
+            CART_ID, USER_ID, PRODUCT_ID, QTY, TITLE, IMG_UUID, PRICE, ADDED_AT 
+        FROM 
+            CART 
+        WHERE 
+            CART_ID = #{cartId}
+    </select>
 	
-	
-	
-	</mapper>
+	<delete id="deleteCartItem">
+   		 DELETE FROM CART WHERE CART_ID = #{cartId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{moduDeal/index.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 수정하기</title>
+    <!-- 필요한 CSS 및 스타일 시트 -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/linericon/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/themify-icons.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/owl-carousel/owl.carousel.min.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/lightbox/simpleLightbox.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/nice-select/css/nice-select.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/animate-css/animate.css}" />
+    <link rel="stylesheet" th:href="@{/vendors/jquery-ui/jquery-ui.css}" />
+    <!-- main css -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/responsive.css}" />
+
+    <style>
+        /* 추가한 CSS */
+        .board_area {
+            padding: 50px 0;
+        }
+
+        .board_form {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main_btn {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .main_btn:hover {
+            background-color: #0056b3;
+        }
+
+        .gallery img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <!-- 수정 폼 영역 -->
+    <section class="board_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="board_form">
+                        <h2>상품 수정</h2>
+                        <form class="form-contact board_form" th:action="@{/board/updateProduct}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="productId" th:value="${product.productId}">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="title" id="title" type="text" th:value="${product.title}" placeholder="[상품종류][상품 모델][제목]">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="description" id="description" cols="30" rows="9" placeholder="상품 설명" th:text="${product.description}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input class="form-control" name="qty" id="qty" type="number" th:value="${product.qty}" placeholder="상품 수량">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input class="form-control" name="price" id="price" type="number" th:value="${product.price}" placeholder="상품 개당 가격">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="productCategory">상품 종류</label> 
+                                        <select class="form-control" id="productCategory" name="productCategory">
+                                            <option value="기타" th:selected="${product.productCategory == '기타'}">기타</option>
+                                            <option value="의류" th:selected="${product.productCategory == '의류'}">의류</option>
+                                            <option value="액세서리" th:selected="${product.productCategory == '액세서리'}">액세서리</option>
+                                            <option value="가방 / 지갑" th:selected="${product.productCategory == '가방 / 지갑'}">가방 / 지갑</option>
+                                            <option value="가구 / 인테리어" th:selected="${product.productCategory == '가구 / 인테리어'}">가구 / 인테리어</option>
+                                            <option value="전자제품" th:selected="${product.productCategory == '전자제품'}">전자제품</option>
+                                            <option value="차량" th:selected="${product.productCategory == '차량'}">차량</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="imgOriginalName">상품 이미지 업로드</label>
+                                        <input type="file" id="imgOriginalName" name="imgOriginalName" multiple accept="image/*"> 
+                                        <small id="imagesHelp" class="form-text text-muted">여러 이미지를 선택하여 업로드할 수 있습니다.</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <button type="submit" class="main_btn">수정 완료</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="gallery">
+                        <!-- 이미지 갤러리 렌더링 -->
+                        <th:block th:each="image : ${product.productImages}">
+                            <img th:src="@{/board/thumbnails(fileName=${image.imgUuid})}" alt="Product Image" class="img-fluid">
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- 필요한 JavaScript 및 스크립트 -->
+<script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/stellar.js}"></script>
+<script th:src="@{/vendors/lightbox/simpleLightbox.min.js}"></script>
+<script th:src="@{/vendors/nice-select/js/jquery.nice-select.min.js}"></script>
+<script th:src="@{/vendors/isotope/imagesloaded.pkgd.min.js}"></script>
+<script th:src="@{/vendors/isotope/isotope-min.js}"></script>
+<script th:src="@{/vendors/owl-carousel/owl.carousel.min.js}"></script>
+<script th:src="@{/js/jquery.ajaxchimp.min.js}"></script>
+<script th:src="@{/js/mail-script.js}"></script>
+<script th:src="@{/js/theme.js}"></script>
+
+<script>
+    // 이미지 업로드 시 처리하는 JavaScript 코드
+    $(document).ready(function() {
+        $('#imgOriginalName').on('change', function() {
+            var files = $(this)[0].files;
+            $('.gallery').empty();
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('.gallery').append('<img src="' + e.target.result + '" class="img-fluid"/>');
+                }
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

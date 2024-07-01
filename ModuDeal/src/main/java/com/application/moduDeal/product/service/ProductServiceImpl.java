@@ -37,6 +37,11 @@ public class ProductServiceImpl implements ProductService {
         return productDAO.getProductImages(productId);
     }
 
+    @Override
+    public List<ProductDTO> getProductsByUserId(String userId) {
+        return productDAO.getProductsByUserId(userId);
+    }
+    
 	@Override
 	public List<Map<String, Object>> getRecentProducts() {
 	    List<Map<String, Object>> products = productDAO.getRecentProducts();
@@ -54,9 +59,30 @@ public class ProductServiceImpl implements ProductService {
 	    // Map의 값을 List로 변환하여 반환
 	    return new ArrayList<>(uniqueProducts.values());
 	}
-//
-//	@Override
-//	public List<Map<String, Object>> filterProducts(String category) {
-//	    return productDAO.getFilteredProducts(category);
-//	}
+	
+    @Override
+    public ProductDTO getProductById(Long productId) {
+        return productDAO.getProductDetails(productId.intValue());
+    }
+
+    @Override
+    public void updateProduct(ProductDTO product) {
+        productDAO.updateProduct(product);
+    }
+
+    @Override
+    public void deleteProductImageById(Long imageId) {
+        productDAO.deleteProductImageById(imageId.intValue());
+    }
+    
+    @Override
+    public void deleteProductById(Long productId) {
+        productDAO.deleteProductById(productId);
+    }
+    
+    @Override
+    public List<Map<String, Object>> getTopLikedProducts() {
+        return productDAO.getTopLikedProducts();
+    }
+
 }

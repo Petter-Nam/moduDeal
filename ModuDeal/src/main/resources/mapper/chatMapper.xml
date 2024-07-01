@@ -1,0 +1,27 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.moduDeal.chat.dao.ChatDAO">
+    <insert id="insertMessage" parameterType="ChatDTO">
+        INSERT INTO CHAT (SENDER_ID, RECEIVER_ID, PRODUCT_ID, MESSAGE, SEND_TIME)
+        VALUES (#{senderId}, #{receiverId}, #{productId}, #{message}, NOW())
+    </insert>
+
+    <select id="selectMessagesByProductId" parameterType="int" resultType="ChatDTO">
+        SELECT * FROM CHAT
+        WHERE PRODUCT_ID = #{productId}
+        ORDER BY SEND_TIME ASC
+    </select>
+
+    <select id="getSellerEmail" parameterType="String" resultType="String">
+        SELECT EMAIL FROM USER WHERE USER_ID = #{receiverId}
+    </select>
+
+    <select id="getSellerIdByProductId" parameterType="int" resultType="String">
+        SELECT USER_ID FROM PRODUCT WHERE PRODUCT_ID = #{productId}
+    </select>
+    
+    <update id="activateChat" parameterType="map">
+        UPDATE CHAT_ACTIVATION
+        SET ACTIVE = 1
+        WHERE PRODUCT_ID = #{productId} AND RECEIVER_ID = #{receiverId}
+    </update>
+</mapper>

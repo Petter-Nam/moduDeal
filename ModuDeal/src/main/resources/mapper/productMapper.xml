@@ -43,37 +43,20 @@
 			)
 		</foreach>
 	</insert>
-	
-<!-- 		<select id="getProductDetails" parameterType="int" resultType="hashmap">
-		    SELECT
-		        P.PRODUCT_ID AS PRODUCT_ID,
-		        P.TITLE AS TITLE,
-		        P.PRICE AS PRICE,
-		        P.QTY AS QTY,
-		        P.DESCRIPTION AS DESCRIPTION,
-		        PI.IMG_UUID AS IMG_UUID,
-		        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
-		        PI.IMG_AT AS IMG_AT
-		    FROM
-		        PRODUCT P
-		    LEFT JOIN
-		        PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-		    WHERE
-		        P.PRODUCT_ID = #{productId}
-		</select> -->
 
 	<select id="getProductDetails" parameterType="int" resultType="ProductDTO">
-		SELECT		
-				PRODUCT_ID,
-		        TITLE,
-		        PRICE,
-		        QTY,
-		        DESCRIPTION,
-		        PRODUCT_CATEGORY
-		FROM
-				PRODUCT
-		WHERE 
-				PRODUCT_ID = #{productId}
+	    SELECT		
+	        PRODUCT_ID,
+	        TITLE,
+	        PRICE,
+	        QTY,
+	        DESCRIPTION,
+	        PRODUCT_CATEGORY,
+	        USER_ID  -- USER_ID 추가
+	    FROM
+	        PRODUCT
+	    WHERE 
+	        PRODUCT_ID = #{productId}
 	</select>
 	
 	<select id="getProductImages" parameterType="int" resultType="ProductImgDTO">
@@ -151,4 +134,107 @@
 	    ORDER BY P.PRODUCT_AT DESC
 	    LIMIT 12
 	</select>
+	
+	<resultMap id="CustomProductResultMap" type="ProductDTO">
+    <id property="productId" column="PRODUCT_ID" />
+    <result property="title" column="TITLE" />
+    <result property="description" column="DESCRIPTION" />
+    <result property="qty" column="QTY" />
+    <result property="price" column="PRICE" />
+    <result property="productCategory" column="PRODUCT_CATEGORY" />
+    <result property="userId" column="USER_ID" />
+    <result property="productAt" column="PRODUCT_AT" />
+    <collection property="productImages" ofType="ProductImgDTO">
+        <result property="imgUuid" column="IMG_UUID" />
+        <result property="imgOriginalName" column="IMG_ORIGINAL_NAME" />
+        <result property="imgAt" column="IMG_AT" />
+    </collection>
+	</resultMap>
+	
+	
+	<select id="getProductsByUserId" parameterType="string" resultMap="CustomProductResultMap">
+	    SELECT
+	        P.PRODUCT_ID,
+	        P.TITLE,
+	        P.DESCRIPTION,
+	        P.QTY,
+	        P.PRICE,
+	        P.PRODUCT_CATEGORY,
+	        P.USER_ID,
+	        P.PRODUCT_AT,
+	        PI.IMG_UUID AS IMG_UUID,
+	        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
+	        PI.IMG_AT AS IMG_AT
+	    FROM
+	        PRODUCT P
+	    LEFT JOIN (
+	        SELECT 
+	            IMG_UUID,
+	            IMG_ORIGINAL_NAME,
+	            IMG_AT,
+	            PRODUCT_ID
+	        FROM
+	            PRODUCT_IMG
+	        WHERE
+	            PRODUCT_ID IN (
+	                SELECT 
+	                    PRODUCT_ID
+	                FROM 
+	                    PRODUCT
+	                WHERE
+	                    USER_ID = #{userId}
+	            )
+	        ORDER BY IMG_AT DESC
+	        LIMIT 1
+	    ) PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+	    WHERE
+	        P.USER_ID = #{userId}
+	    ORDER BY
+	        P.PRODUCT_AT DESC
+	</select>
+	
+	<update id="updateProduct" parameterType="ProductDTO">
+    UPDATE PRODUCT
+    SET TITLE = #{title},
+        DESCRIPTION = #{description},
+        QTY = #{qty},
+        PRICE = #{price},
+        PRODUCT_CATEGORY = #{productCategory}
+    WHERE PRODUCT_ID = #{productId}
+	</update>
+	
+	<delete id="deleteProductImageById" parameterType="int">
+	    DELETE FROM PRODUCT_IMG
+	    WHERE IMG_ID = #{imageId}
+	</delete>
+	
+	<delete id="deleteProductById" parameterType="long">
+    DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
+	</delete>
+	
+	<select id="getTopLikedProducts" resultType="hashmap">
+        SELECT
+            P.PRODUCT_ID AS PRODUCT_ID,
+            P.TITLE AS TITLE,
+            P.PRICE AS PRICE,
+            P.QTY AS QTY,
+            (
+                SELECT IMG_UUID 
+                FROM PRODUCT_IMG 
+                WHERE PRODUCT_ID = P.PRODUCT_ID 
+                ORDER BY IMG_AT ASC 
+                LIMIT 1
+            ) AS IMG_UUID,
+            (
+                SELECT COUNT(*)
+                FROM PRODUCT_LIKE PL
+                WHERE PL.PRODUCT_ID = P.PRODUCT_ID
+            ) AS likeCount
+        FROM
+            PRODUCT P
+        ORDER BY
+            likeCount DESC
+        LIMIT 12
+    </select>
+
 </mapper>

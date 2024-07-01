@@ -1,0 +1,49 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.moduDeal.productLike.dao.ProductLikeDAO">
+
+    <!-- 좋아요 상태 확인 -->
+    <select id="isLike" resultType="boolean" parameterType="ProductLikeDTO">
+        SELECT 
+        		COUNT(1) 
+        FROM 
+        		PRODUCT_LIKE 
+        WHERE 
+        		PRODUCT_ID = #{productId} 
+        AND 
+        		USER_ID = #{userId}
+    </select>
+
+    <!-- 좋아요 추가 -->
+    <insert id="incrementLikeCount" parameterType="ProductLikeDTO">
+        INSERT INTO PRODUCT_LIKE (
+        PRODUCT_ID,
+         USER_ID
+         ) 
+        VALUES (
+        #{productId}, 
+        #{userId}
+        )
+    </insert>
+
+    <!-- 좋아요 제거 -->
+    <delete id="decrementLikeCount" parameterType="ProductLikeDTO">
+        DELETE  FROM PRODUCT_LIKE 
+        WHERE 
+        		PRODUCT_ID = #{productId} 
+          AND 
+          		USER_ID = #{userId}
+    </delete>
+
+    <!-- 좋아요 개수 가져오기 -->
+	<select id="getLikeCount" resultType="int" parameterType="int">
+	    SELECT 
+	        COUNT(*)
+	    FROM 
+	        PRODUCT_LIKE
+	    WHERE 
+	        PRODUCT_ID = #{productId}
+	</select>
+
+
+
+</mapper>
