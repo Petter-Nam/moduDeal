@@ -77,14 +77,21 @@ public class ProductServiceImpl implements ProductService {
         productDAO.deleteProductImageById(imageId.intValue());
     }
     
-    @Transactional
-    public void deleteProductById(int productId) {
-        productDAO.deleteProductById(productId);
-    }
-    
     @Override
     public List<Map<String, Object>> getTopLikedProducts() {
         return productDAO.getTopLikedProducts();
+    }
+    
+    @Transactional
+    @Override
+    public void deleteProductById(int productId) {
+        productDAO.deleteProductLikes(productId);
+        productDAO.deleteProductReviews(productId);
+        productDAO.deleteProductFromCart(productId);
+        productDAO.deleteChatActivations(productId);
+        productDAO.deleteChats(productId);
+        productDAO.deleteProductImages(productId);
+        productDAO.deleteProductById(productId);
     }
 
 }

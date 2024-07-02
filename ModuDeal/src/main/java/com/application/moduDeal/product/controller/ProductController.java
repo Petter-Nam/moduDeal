@@ -180,19 +180,8 @@ public class ProductController {
     
     @PostMapping("/deleteProduct")
     public String deleteProduct(@RequestParam("productId") int productId) {
-    	System.out.println(productId + "auhdfasjdfjasdlfjasidfjasiodjfioasjdfioasjdfioasjdfioasjdfoiasjdfoiajsdiofjasodifjasoidjfoiasdjfoasijfoiasdjfoiasjdfioajdfoisjdf");
         productService.deleteProductById(productId);
         return "redirect:/cart/cartList"; // 삭제 후 상품 목록 페이지로 리다이렉트
     }
     
-//    @GetMapping("/filterProducts")
-//    public String filterProducts(@RequestParam(required = false) String category,
-//                                 Model model) {
-//        List<Map<String, Object>> filteredProducts = productService.filterProducts(category);
-//        model.addAttribute("recentProducts", filteredProducts);
-//        return "/moduDeal/category";
-//    }
-//    
-
-
 }

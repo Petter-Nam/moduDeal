@@ -212,10 +212,30 @@
 	    DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId};
 	</delete>
 	
-<!-- 	<delete id="deleteProductImageById" parameterType="int">
-	  DELETE FROM CART WHERE PRODUCT_ID = #{productId};
-	</delete> -->
-	
+	    <delete id="deleteProductLikes" parameterType="int">
+        DELETE FROM PRODUCT_LIKE WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProductReviews" parameterType="int">
+        DELETE FROM REVIEW WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProductFromCart" parameterType="int">
+        DELETE FROM CART WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteChatActivations" parameterType="int">
+        DELETE FROM CHAT_ACTIVATION WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteChats" parameterType="int">
+        DELETE FROM CHAT WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProductImages" parameterType="int">
+        DELETE FROM PRODUCT_IMG WHERE PRODUCT_ID = #{productId}
+    </delete>
+    
 	<select id="getTopLikedProducts" resultType="hashmap">
         SELECT
             P.PRODUCT_ID AS PRODUCT_ID,

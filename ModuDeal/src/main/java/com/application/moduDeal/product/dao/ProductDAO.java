@@ -30,4 +30,15 @@ public interface ProductDAO {
     
     public List<Map<String, Object>> getTopLikedProducts();
 
+    public void deleteProductLikes(int productId);
+
+    public void deleteProductReviews(int productId);
+
+    public void deleteProductFromCart(int productId);
+
+    public void deleteChatActivations(int productId);
+
+    public void deleteChats(int productId);
+
+    public void deleteProductImages(int productId);
 }

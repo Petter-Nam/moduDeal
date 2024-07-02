@@ -42,7 +42,7 @@ public class ChatController {
         model.addAttribute("senderId", senderId);
 
         // 채팅 링크를 생성
-        String chatLink = "http://localhost/chat?productId=" + productId
+        String chatLink = "www.modudeals.com/chat?productId=" + productId
             + "&receiverId=" + receiverId
             + "&senderId=" + senderId;
 
