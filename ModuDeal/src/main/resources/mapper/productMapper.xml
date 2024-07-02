@@ -110,30 +110,6 @@
 	        P.PRODUCT_AT DESC
 	    LIMIT 12
 	</select>
-
-
-	<select id="getFilteredProducts" resultMap="ProductResultMap" parameterType="map">
-    SELECT
-        P.PRODUCT_ID AS PRODUCT_ID,
-        P.TITLE AS TITLE,
-        P.PRICE AS PRICE,
-        P.QTY AS QTY,
-        P.DESCRIPTION AS DESCRIPTION,
-        PI.IMG_UUID AS IMG_UUID,
-        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
-        PI.IMG_AT AS IMG_AT
-    FROM
-        PRODUCT P
-    LEFT JOIN
-        PRODUCT_IMG PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-	    <where>
-	        <if test="category != null and category != ''">
-	            AND P.PRODUCT_CATEGORY = #{category}
-	        </if>
-	    </where>
-	    ORDER BY P.PRODUCT_AT DESC
-	    LIMIT 12
-	</select>
 	
 	<resultMap id="CustomProductResultMap" type="ProductDTO">
     <id property="productId" column="PRODUCT_ID" />
@@ -212,7 +188,7 @@
 	    DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId};
 	</delete>
 	
-	    <delete id="deleteProductLikes" parameterType="int">
+	<delete id="deleteProductLikes" parameterType="int">
         DELETE FROM PRODUCT_LIKE WHERE PRODUCT_ID = #{productId}
     </delete>
 
@@ -259,6 +235,36 @@
         ORDER BY
             likeCount DESC
         LIMIT 12
+    </select>
+    
+    <select id="getProductsByCategory" parameterType="string" resultType="hashmap">
+        SELECT
+            P.PRODUCT_ID AS PRODUCT_ID,
+            P.TITLE AS TITLE,
+            P.PRICE AS PRICE,
+            P.QTY AS QTY,
+            P.DESCRIPTION AS DESCRIPTION,
+            (
+                SELECT IMG_UUID 
+                FROM PRODUCT_IMG 
+                WHERE PRODUCT_ID = P.PRODUCT_ID 
+                ORDER BY IMG_AT ASC 
+                LIMIT 1
+            ) AS IMG_UUID,
+            (
+                SELECT IMG_ORIGINAL_NAME 
+                FROM PRODUCT_IMG 
+                WHERE PRODUCT_ID = P.PRODUCT_ID 
+                ORDER BY IMG_AT ASC 
+                LIMIT 1
+            ) AS IMG_ORIGINAL_NAME,
+            P.PRODUCT_AT AS PRODUCT_AT
+        FROM
+            PRODUCT P
+        WHERE
+            P.PRODUCT_CATEGORY = #{category}
+        ORDER BY 
+            P.PRODUCT_AT DESC
     </select>
 
 </mapper>

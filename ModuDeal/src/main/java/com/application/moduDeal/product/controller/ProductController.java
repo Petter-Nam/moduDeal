@@ -116,6 +116,27 @@ public class ProductController {
         return "moduDeal/category";
     }
     
+    
+    @GetMapping("/filterProducts")
+    @ResponseBody
+    public List<Map<String, Object>> filterProductsByCategory(@RequestParam("category") String category) {
+        List<Map<String, Object>> filteredProducts;
+        if (category.equals("전체")) {
+            filteredProducts = productService.getRecentProducts();
+        } else {
+            filteredProducts = productService.filterProductsByCategory(category);
+        }
+
+        // 각 상품에 대한 좋아요 수를 가져와서 추가
+        for (Map<String, Object> product : filteredProducts) {
+            int productId = ((Number) product.get("PRODUCT_ID")).intValue();
+            int likeCount = productLikeService.getLikeCount(productId);
+            product.put("likeCount", likeCount);
+        }
+
+        return filteredProducts;
+    }
+    
     @GetMapping("/thumbnails")
     @ResponseBody
     public Resource thumbnails(@RequestParam("fileName") String fileName) throws MalformedURLException {

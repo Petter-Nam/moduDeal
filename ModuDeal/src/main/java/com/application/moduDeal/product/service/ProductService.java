@@ -30,5 +30,6 @@ public interface ProductService {
     public void deleteProductById(int productId);
     
     public List<Map<String, Object>> getTopLikedProducts();
-
+    
+    public List<Map<String, Object>> filterProductsByCategory(String category);
 }

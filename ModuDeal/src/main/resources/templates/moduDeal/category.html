@@ -6,6 +6,67 @@
 <meta charset="UTF-8">
 <title>상품 구매</title>
 <script th:src="@{/js/jquery-3.6.1.min.js}"></script>
+    <script th:inline="javascript">
+        var sessionUserId = /*[[${session.userId}]]*/ null;
+    </script>
+<script>
+function filterCategory(category) {
+    $.ajax({
+        url: "/board/filterProducts",
+        type: "GET",
+        data: { category: category },
+        success: function(data) {
+            $('#product-container').empty();
+
+            data.forEach(product => {
+                const productHTML = `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-product">
+                            <div class="product-img">
+                                <img class="card-img"
+                                    src="/board/thumbnails?fileName=${product.IMG_UUID}"
+                                    alt="상품 이미지" width="200" height="300" />
+                                <div class="p_icon">
+                                    <form action="/like/toggleCheck" method="get">
+                                        <input type="hidden" name="productId" value="${product.PRODUCT_ID}" />
+                                        <input type="hidden" name="userId" value="${sessionUserId}" />
+                                        <button type="submit" class="like-button ${product.isLiked ? 'liked' : ''}">
+                                            <i class="ti-heart"></i>
+                                        </button>
+                                    </form>
+                                    <span class="like-count">${product.likeCount}</span>
+                                    <form action="/cart/addToCart" method="post">
+                                        <input type="hidden" name="userId" value="${sessionUserId}" />
+                                        <input type="hidden" name="productId" value="${product.PRODUCT_ID}" />
+                                        <input type="hidden" name="price" value="${product.PRICE}">
+                                        <input type="hidden" name="qty" value="${product.QTY}" />
+                                        <input type="hidden" name="title" value="${product.TITLE}" />
+                                        <input type="hidden" name="imgUuid" value="${product.IMG_UUID}" />
+                                        <button type="submit">
+                                            <i class="ti-shopping-cart"></i> 장바구니
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="product-btm">
+                                <a href="/review/checkReview?productId=${product.PRODUCT_ID}">${product.TITLE}</a>
+                                <span>${new Intl.NumberFormat().format(product.PRICE)} 원</span>
+                                <span>수량: ${product.QTY}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#product-container').append(productHTML);
+            });
+        },
+        error: function(error) {
+            console.error("상품 목록을 가져오는 데 실패했습니다:", error);
+        }
+    });
+}
+</script>
+
+
 <script th:src="@{/js/jquery-ui.min.js}"></script>
 <link rel="stylesheet" th:href="@{/css/jquery-ui.css}">
 <style>
@@ -108,7 +169,6 @@
 .category-item:hover {
     background-color: #e0e0e0;
 }
-
 </style>
 </head>
 <body>
@@ -139,7 +199,7 @@
 						</div>
 
 						<div class="latest_product_inner">
-							<div class="row">
+							<div class="row" id="product-container">
 								<div th:each="product : ${recentProducts}" class="col-lg-4 col-md-6">
 								    <div class="single-product">
 								        <div class="product-img">
@@ -197,16 +257,15 @@
 							</div>
 							<div class="widgets_inner" id="category-filter">
 								<div class="category-button" data-category="">
-									<button class="category-item" data-category="" value="전체">전체</button>
-									<button class="category-item" data-category="의류" value="의류">의류</button>
-									<button class="category-item" data-category="악세사리" value="악세사리">악세사리</button>
-									<button class="category-item" data-category="가방" value="가방">가방
-										/ 지갑</button>
-									<button class="category-item" data-category="가구" value="가구">가구
-										/ 인테리어</button>
-									<button class="category-item" data-category="전자기기" value="전자기기">전자기기</button>
-									<button class="category-item" data-category="차량">차량</button>
-									<button class="category-item" data-category="기타" value="기타">기타</button>
+									<!-- JavaScript를 사용하여 각 버튼에 클릭 이벤트 추가 -->
+									<button class="category-item" data-category="all"  name="category" th:onclick="|filterCategory('all')|">전체</button>
+									<button class="category-item" data-category="의류"  name="category"  th:onclick="|filterCategory('의류')|">의류</button>
+									<button class="category-item" data-category="악세사리" name="category"  th:onclick="|filterCategory('액세서리')|">액세서리</button>
+									<button class="category-item" data-category="가방" name="category"  th:onclick="|filterCategory('가방 / 지갑')|">가방 / 지갑</button>
+									<button class="category-item" data-category="가구" name="category"  th:onclick="|filterCategory('가구 / 인테리어')|">가구 / 인테리어</button>
+									<button class="category-item" data-category="전자기기"  name="category"  th:onclick="|filterCategory('전자제품')|">전자제품</button>
+									<button class="category-item" data-category="차량" name="category"  th:onclick="|filterCategory('차량')|">차량</button>
+									<button class="category-item" data-category="기타"  name="category"  th:onclick="|filterCategory('기타')|">기타</button>
 								</div>
 							</div>
 						</div>
@@ -216,8 +275,5 @@
 		</section>
 	</div>
 
-	<script>
-		
-	</script>
 </body>
 </html>

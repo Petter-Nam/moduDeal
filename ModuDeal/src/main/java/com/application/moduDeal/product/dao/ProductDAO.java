@@ -41,4 +41,7 @@ public interface ProductDAO {
     public void deleteChats(int productId);
 
     public void deleteProductImages(int productId);
+    
+    public List<Map<String, Object>> getProductsByCategory(@Param("category") String category);
+    
 }

@@ -83,7 +83,6 @@ public class ProductServiceImpl implements ProductService {
     }
     
     @Transactional
-    @Override
     public void deleteProductById(int productId) {
         productDAO.deleteProductLikes(productId);
         productDAO.deleteProductReviews(productId);
@@ -94,4 +93,9 @@ public class ProductServiceImpl implements ProductService {
         productDAO.deleteProductById(productId);
     }
 
+    
+    @Override
+    public List<Map<String, Object>> filterProductsByCategory(String category) {
+        return productDAO.getProductsByCategory(category);
+    }
 }
