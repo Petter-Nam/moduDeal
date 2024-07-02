@@ -50,7 +50,7 @@ public class ChatController {
         String sellerEmail = chatService.getSellerEmail(receiverId);
         emailService.sendChatNotification(sellerEmail, senderId, chatLink);
 
-        return "/moduDeal/chat"; // chat.html 템플릿으로 직접 이동
+        return "moduDeal/chat"; // chat.html 템플릿으로 직접 이동
     }
 
 
@@ -69,7 +69,7 @@ public class ChatController {
 
         chatService.activateChat(activeMap);
 
-        return "/moduDeal/chat"; // 채팅 페이지로 이동
+        return "moduDeal/chat"; // 채팅 페이지로 이동
     }
 
     

@@ -113,7 +113,7 @@ public class ProductController {
 
         model.addAttribute("recentProducts", recentProducts);
 
-        return "/moduDeal/category";
+        return "moduDeal/category";
     }
     
     @GetMapping("/thumbnails")
@@ -130,7 +130,7 @@ public class ProductController {
         // productId를 사용하여 상품 정보를 DB에서 조회
         ProductDTO product = productService.getProductById(productId);
         model.addAttribute("product", product);
-        return "/moduDeal/editProduct";
+        return "moduDeal/editProduct";
     }
 
     @PostMapping("/updateProduct")

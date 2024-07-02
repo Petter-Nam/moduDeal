@@ -98,7 +98,7 @@ public class UserController {
 		// 모델에 회원 정보를 추가합니다.
 		model.addAttribute("userDTO", userDTO);
 
-		return "/moduDeal/myPage";
+		return "moduDeal/myPage";
 	}
 
 	@PostMapping("/changePassword")
