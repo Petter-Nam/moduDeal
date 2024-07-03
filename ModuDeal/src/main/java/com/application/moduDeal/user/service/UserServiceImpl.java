@@ -1,5 +1,7 @@
 package com.application.moduDeal.user.service;
 
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.application.moduDeal.chat.controller.EmailService;
 import com.application.moduDeal.user.dao.UserDAO;
 import com.application.moduDeal.user.dto.UserDTO;
 
@@ -21,6 +24,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+    @Autowired
+    private EmailService emailService;
 	
 	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class); 
 	
@@ -114,5 +120,30 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 	}	
+	
+	@Override
+	public String findIdByNameAndPhone(UserDTO userDTO) {
+	    return userDAO.findIdByNameAndPhone(userDTO);
+	}
 
+	@Override
+	public boolean checkUserExists(UserDTO userDTO) {
+		UserDTO userFromDb = userDAO.checkUserExists(userDTO);
+		return userFromDb != null;
+	}
+
+	@Override
+	public boolean resetPassword(String userId, String password) {
+	    String encodedPassword = passwordEncoder.encode(password);
+	    return userDAO.updatePassword(userId, encodedPassword) > 0;
+	}
+	
+	@Override
+	public String findEmailByNameAndPhone(UserDTO userDTO) {
+		String email = userDAO.findEmailByNameAndPhone(userDTO);
+		if (email == null || email.isEmpty()) {
+			logger.error("Email address is null or empty for user: {}", userDTO);
+		}
+		return email;
+	}
 }

@@ -98,4 +98,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Map<String, Object>> filterProductsByCategory(String category) {
         return productDAO.getProductsByCategory(category);
     }
+    
+    @Override
+    public List<Map<String, Object>> searchProductsByTitle(String searchTerm) {
+        return productDAO.searchProductsByTitle(searchTerm);
+    }
 }

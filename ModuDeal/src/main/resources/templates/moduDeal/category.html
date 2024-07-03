@@ -65,6 +65,69 @@ function filterCategory(category) {
     });
 }
 </script>
+<script>
+$(document).ready(function() {
+    $('#search-form').submit(function(e) {
+        e.preventDefault();
+        var searchTerm = $('#search-input').val();
+        searchProducts(searchTerm);
+    });
+});
+
+function searchProducts(searchTerm) {
+    $.ajax({
+        url: "/board/searchProducts",
+        type: "GET",
+        data: { term: searchTerm },
+        success: function(data) {
+            $('#product-container').empty();
+            data.forEach(product => {
+                const productHTML = `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="single-product">
+                            <div class="product-img">
+                                <img class="card-img"
+                                    src="/board/thumbnails?fileName=${product.IMG_UUID}"
+                                    alt="상품 이미지" width="200" height="300" />
+                                <div class="p_icon">
+                                    <form action="/like/toggleCheck" method="get">
+                                        <input type="hidden" name="productId" value="${product.PRODUCT_ID}" />
+                                        <input type="hidden" name="userId" value="${sessionUserId}" />
+                                        <button type="submit" class="like-button ${product.isLiked ? 'liked' : ''}">
+                                            <i class="ti-heart"></i>
+                                        </button>
+                                    </form>
+                                    <span class="like-count">${product.likeCount}</span>
+                                    <form action="/cart/addToCart" method="post">
+                                        <input type="hidden" name="userId" value="${sessionUserId}" />
+                                        <input type="hidden" name="productId" value="${product.PRODUCT_ID}" />
+                                        <input type="hidden" name="price" value="${product.PRICE}">
+                                        <input type="hidden" name="qty" value="${product.QTY}" />
+                                        <input type="hidden" name="title" value="${product.TITLE}" />
+                                        <input type="hidden" name="imgUuid" value="${product.IMG_UUID}" />
+                                        <button type="submit">
+                                            <i class="ti-shopping-cart"></i> 장바구니
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="product-btm">
+                                <a href="/review/checkReview?productId=${product.PRODUCT_ID}">${product.TITLE}</a>
+                                <span>${new Intl.NumberFormat().format(product.PRICE)} 원</span>
+                                <span>수량: ${product.QTY}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#product-container').append(productHTML);
+            });
+        },
+        error: function(error) {
+            console.error("상품 검색에 실패했습니다:", error);
+        }
+    });
+}
+</script>
 
 
 <script th:src="@{/js/jquery-ui.min.js}"></script>
@@ -169,6 +232,42 @@ function filterCategory(category) {
 .category-item:hover {
     background-color: #e0e0e0;
 }
+
+.search-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-container form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            outline: none;
+        }
+
+        .search-container button:hover {
+            background-color: #45a049;
+        }
 </style>
 </head>
 <body>
@@ -195,7 +294,14 @@ function filterCategory(category) {
 				<div class="row flex-row-reverse">
 					<div class="col-lg-9">
 						<div class="product_top_bar">
-							<div class="left_dorp"></div>
+							<div class="left_dorp">
+								<div class="search-container">
+								    <form id="search-form">
+								        <input type="text" id="search-input" placeholder="상품 검색...">
+								        <button type="submit">검색</button>
+								    </form>
+								</div>
+							</div>
 						</div>
 
 						<div class="latest_product_inner">

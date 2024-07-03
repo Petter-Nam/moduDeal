@@ -267,4 +267,33 @@
             P.PRODUCT_AT DESC
     </select>
 
+	<select id="searchProductsByTitle" resultType="hashmap">
+	    SELECT
+	        P.PRODUCT_ID AS PRODUCT_ID,
+	        P.TITLE AS TITLE,
+	        P.PRICE AS PRICE,
+	        P.QTY AS QTY,
+	        P.DESCRIPTION AS DESCRIPTION,
+	        (
+	            SELECT IMG_UUID 
+	            FROM PRODUCT_IMG 
+	            WHERE PRODUCT_ID = P.PRODUCT_ID 
+	            ORDER BY IMG_AT ASC 
+	            LIMIT 1
+	        ) AS IMG_UUID,
+	        (
+	            SELECT IMG_ORIGINAL_NAME 
+	            FROM PRODUCT_IMG 
+	            WHERE PRODUCT_ID = P.PRODUCT_ID 
+	            ORDER BY IMG_AT ASC 
+	            LIMIT 1
+	        ) AS IMG_ORIGINAL_NAME,
+	        P.PRODUCT_AT AS PRODUCT_AT
+	    FROM
+	        PRODUCT P
+	    WHERE
+	        P.TITLE LIKE CONCAT('%', #{searchTerm}, '%')
+	    ORDER BY 
+	        P.PRODUCT_AT DESC
+	</select>
 </mapper>

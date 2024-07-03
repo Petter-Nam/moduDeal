@@ -44,4 +44,6 @@ public interface ProductDAO {
     
     public List<Map<String, Object>> getProductsByCategory(@Param("category") String category);
     
+    public List<Map<String, Object>> searchProductsByTitle(@Param("searchTerm") String searchTerm);
+    
 }

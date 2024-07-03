@@ -12,5 +12,9 @@ public interface UserService {
 	public boolean updateHp(UserDTO userDTO);
 	public boolean updateEmail(UserDTO userDTO);
 	public boolean updateAddress(UserDTO userDTO);
+	public String findIdByNameAndPhone(UserDTO userDTO);
+	public boolean checkUserExists(UserDTO userDTO);
+	public boolean resetPassword(String userId, String password);
+	public String findEmailByNameAndPhone(UserDTO userDTO);
 	
 }

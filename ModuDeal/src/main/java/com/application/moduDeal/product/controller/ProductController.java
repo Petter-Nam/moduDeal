@@ -137,6 +137,21 @@ public class ProductController {
         return filteredProducts;
     }
     
+    @GetMapping("/searchProducts")
+    @ResponseBody
+    public List<Map<String, Object>> searchProducts(@RequestParam("term") String searchTerm) {
+        List<Map<String, Object>> searchResults = productService.searchProductsByTitle(searchTerm);
+        
+        // 각 상품에 대한 좋아요 수를 가져와서 추가
+        for (Map<String, Object> product : searchResults) {
+            int productId = ((Number) product.get("PRODUCT_ID")).intValue();
+            int likeCount = productLikeService.getLikeCount(productId);
+            product.put("likeCount", likeCount);
+        }
+
+        return searchResults;
+    }
+    
     @GetMapping("/thumbnails")
     @ResponseBody
     public Resource thumbnails(@RequestParam("fileName") String fileName) throws MalformedURLException {

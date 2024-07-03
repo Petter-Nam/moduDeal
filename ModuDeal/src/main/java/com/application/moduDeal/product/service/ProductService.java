@@ -32,4 +32,6 @@ public interface ProductService {
     public List<Map<String, Object>> getTopLikedProducts();
     
     public List<Map<String, Object>> filterProductsByCategory(String category);
+    
+    public List<Map<String, Object>> searchProductsByTitle(String searchTerm);
 }
