@@ -52,7 +52,7 @@ public class AdminController {
             session.setAttribute("memberId", admin.getAdminId());
             session.setAttribute("role", "admin");
             session.setMaxInactiveInterval(60 * 30); // 30분
-            return "redirect:/admin/dashBoard";
+            return "redirect:/admin/adminMain";
         }
         return "redirect:/admin/adminLogin?error";
     }
