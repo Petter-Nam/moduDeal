@@ -119,7 +119,7 @@
                                 </button>
                             </div>
                             <div class="card_area">
-                                <a class="main_btn" href="#" onclick="checkLoginAndStartChat('${productDTO.productId}', '${productDTO.userId}', '${session.userId}')">채팅하기</a>
+                                <a class="main_btn" th:href="@{'/chat?productId=' + ${productDTO.productId} + '&receiverId=' + ${productDTO.userId} + '&senderId=' + ${session.userId}}" onclick="startChat('${productDTO.productId}', '${productDTO.userId}', '${session.userId}')">채팅하기</a>
 
                                 <a class="icon_btn" href="#">
                                     <i class="lnr lnr-diamond"></i>
@@ -244,19 +244,6 @@
 	    stompClient.send('/app/chat/send', {}, JSON.stringify(message));
 	}
 	</script>
-	<script>
-    function checkLoginAndStartChat(productId, receiverId, senderId) {
-        if (!senderId) {
-
-            window.location.href = '/moduDeal/login?redirect=/chat?productId=' + productId + '&receiverId=' + receiverId;
-        } else {
-
-            window.location.href = '/chat?productId=' + productId + '&receiverId=' + receiverId + '&senderId=' + senderId;
-        }
-    }
-
-
-    </script>
 </body>
 
 </html>

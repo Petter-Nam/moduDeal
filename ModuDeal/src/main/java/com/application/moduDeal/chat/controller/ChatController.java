@@ -40,28 +40,26 @@ public class ChatController {
         Model model,
         HttpSession session
     ) {
-        String loggedInUser = (String) session.getAttribute("userId");
-        if (loggedInUser == null) {
-            // 로그인되지 않은 경우, 로그인 페이지로 리다이렉트
-            return "redirect:/moduDeal/login?redirect=/chat?productId=" + productId
-                + "&receiverId=" + receiverId
-                + "&senderId=" + senderId;
+        // 로그인 상태 확인
+        if (session.getAttribute("userId") == null) {
+            // 로그인 상태가 아닌 경우 로그인 페이지로 리디렉션
+            return "redirect:/moduDeal/login";
         }
 
+        // 로그인 상태인 경우 기존 채팅 로직 실행
         model.addAttribute("productId", productId);
         model.addAttribute("receiverId", receiverId);
         model.addAttribute("senderId", senderId);
 
         // 채팅 링크를 생성
-        String chatLink = "www.modudeals.com/chat?productId=" + productId
-            + "&receiverId=" + receiverId
-            + "&senderId=" + senderId;
+        String chatLink = "http://www.modudeals.com:80/chat?productId=" + productId
+                + "&receiverId=" + receiverId
+                + "&senderId=" + senderId;
 
-        // 이메일을 통해 채팅 알림을 보냅니다
-        String sellerEmail = chatService.getSellerEmail(receiverId);
-        emailService.sendChatNotification(sellerEmail, senderId, chatLink);
+            String sellerEmail = chatService.getSellerEmail(receiverId);
+            emailService.sendChatNotification(sellerEmail, senderId, chatLink);
 
-        return "moduDeal/chat";
+        return "moduDeal/chat"; // chat.html 템플릿으로 직접 이동
     }
 
 
@@ -72,6 +70,7 @@ public class ChatController {
         @RequestParam("receiverId") String receiverId,
         @RequestParam("senderId") String senderId // 추가된 부분
     ) {
+
         // 채팅 활성화 로직을 구현합니다.
         Map<String, Object> activeMap = new HashMap<>();
         activeMap.put("productId", productId);

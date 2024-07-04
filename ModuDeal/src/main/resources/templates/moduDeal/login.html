@@ -98,32 +98,35 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script th:src="@{/js/jquery-3.6.1.min.js}"></script>
-  <script>
-  $("#loginBtn").click(function () {
-	    let signInData = {
-	        "userId": $("[name='userId']").val(),
-	        "password": $("[name='password']").val()
-	    }
-
-	    $.ajax({
-	        url: "/moduDeal/login",
-	        type: "post",
-	        contentType: "application/json",
-	        data: JSON.stringify(signInData),
-	        success: function (response) {
-	            if (response.status === "success") {
-	                if (response.redirect) {
-	                    window.location.href = response.redirect;
-	                } else {
-	                    window.location.href = "/";  // 메인 페이지 URL을 확인하세요
-	                }
-	            } else {
-	                $("#failMsg").html("<span style='color:red;'>아이디와 패스워드를 확인하세요.</span>");
-	            }
+	<script>
+	$(function () {
+	    $("#loginBtn").click(function () {
+	        let signInData = {
+	            "userId": $("[name='userId']").val(),
+	            "password": $("[name='password']").val()
 	        }
+	
+	        $.ajax({
+	            url: "/moduDeal/login",
+	            type: "post",
+	            contentType: "application/json",
+	            data: JSON.stringify(signInData),
+	            success: function (response) {
+	                if (response == "y") {
+	                    var redirectUrl = new URLSearchParams(window.location.search).get('redirectUrl');
+	                    if (redirectUrl) {
+	                        window.location.href = decodeURIComponent(redirectUrl);
+	                    } else {
+	                        location.href = "/";
+	                    }
+	                } else {
+	                    $("#failMsg").html("<span style='color:red;'>아이디와 패스워드를 확인하세요.</span>");
+	                }
+	            }
+	        });
 	    });
 	});
-    </script>
+	</script>
     <script src="/js/popper.js"></script>
     <script src="/js/bootstrap.min.js"></script>
 
