@@ -44,23 +44,24 @@ public class UserController {
 		return "moduDeal/login";
 	}
 
-	@PostMapping("/login") // 로그인 로직을 처리하는 코드입니다.
+	@PostMapping("/login")
 	@ResponseBody
-	public String login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
+	public String login(@RequestBody UserDTO userDTO, HttpServletRequest request, 
+	                    @RequestParam(required = false) String redirect) {
+	    String isValiduser = "n";
+	    UserDTO resultDTO = userService.login(userDTO);
 
-		String isValiduser = "n";
-		UserDTO resultDTO = userService.login(userDTO);
+	    if (resultDTO != null) {
+	        HttpSession session = request.getSession();
+	        session.setAttribute("userId", userDTO.getUserId());
+	        isValiduser = "y";
+	        
+	        if (redirect != null && !redirect.isEmpty()) {
+	            return "redirect:" + redirect;
+	        }
+	    }
 
-		if (resultDTO != null) {
-
-			HttpSession session = request.getSession();
-			session.setAttribute("userId", userDTO.getUserId());
-
-			isValiduser = "y";
-		}
-
-		return isValiduser;
-
+	    return isValiduser;
 	}
 
 	@GetMapping("/logOut") // 로그아웃하는 코드입니다.
