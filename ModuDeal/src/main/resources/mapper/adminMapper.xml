@@ -1,0 +1,65 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.moduDeal.admin.dao.AdminDAO">
+
+    <select id="login" resultType="AdminDTO">
+        SELECT * FROM ADMIN WHERE USERNAME = #{username} AND PASSWORD = #{password}
+    </select>
+
+    <select id="getAllSellerProducts" resultMap="sellerProductResultMap">
+		SELECT p.PRODUCT_ID, u.USER_ID, u.NAME as userName, p.TITLE as productTitle, 
+		       p.PRICE, p.QTY as quantity, 
+		       p.DESCRIPTION as description,
+		       pi.IMG_UUID as imgUuid, pi.IMG_ORIGINAL_NAME
+		FROM PRODUCT p
+		JOIN USER u ON p.USER_ID = u.USER_ID
+		LEFT JOIN (
+		    SELECT PRODUCT_ID, GROUP_CONCAT(IMG_UUID) AS IMG_UUID, GROUP_CONCAT(IMG_ORIGINAL_NAME) AS IMG_ORIGINAL_NAME
+		    FROM PRODUCT_IMG
+		    GROUP BY PRODUCT_ID
+		) pi ON p.PRODUCT_ID = pi.PRODUCT_ID
+    </select>
+
+	<resultMap id="sellerProductResultMap" type="SellerProductDTO">
+	    <id property="productId" column="PRODUCT_ID"/>
+	    <result property="userId" column="USER_ID"/>
+	    <result property="userName" column="userName"/>
+	    <result property="productTitle" column="productTitle"/>
+	    <result property="price" column="PRICE"/>
+	    <result property="quantity" column="quantity"/>
+	    <result property="description" column="description"></result>
+	    <collection property="sellerProductImages" ofType="SellerProductImgDTO">
+	        <result property="imgUuid" column="IMG_UUID"/>
+	        <result property="imgOriginalName" column="IMG_ORIGINAL_NAME"/>
+	    </collection>
+	</resultMap>
+
+
+
+    <delete id="deleteProductImages">
+        DELETE FROM PRODUCT_IMG WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProductFromCart">
+        DELETE FROM CART WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProductReviews">
+        DELETE FROM REVIEW WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProductChats">
+        DELETE FROM CHAT WHERE PRODUCT_ID = #{productId}
+    </delete>
+
+    <delete id="deleteProduct">
+        DELETE FROM PRODUCT WHERE PRODUCT_ID = #{productId}
+    </delete>
+    
+    <select id="getAllRegitUser">
+    	SELECT 
+    				*
+    	FROM
+    				USER
+    </select>
+    
+</mapper>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>JPA CRUD Test</title>
+<script th:src="@{/jquery-3.7.1.min.js}"></script>
+<script>
+
+
+	$(function(){
+	
+		getBrandList();
+	
+		$("#getDetail").click(function(){
+			
+			$.ajax({
+				url : "/brand/" + $("#getDetailId").val(),
+				type : "get",
+				success : function(data) {
+					
+					let brandDetail =  `
+					<table border='1'>
+						<tr>
+						<th>brandId</th>
+						<th>brandNm</th>
+						<th>activeYn</th>
+						<th>enteredDt</th>
+					</tr>
+					<tr>
+						<td>${data.brandId}</td>
+						<td>${data.brandNm}</td>
+						<td>${data.activeYn}</td>
+						<td>${data.enteredDt}</td>
+					</tr>`
+					
+					$("#printBrandDetail").html(brandDetail);
+				}
+			});
+	
+		});
+		
+		$("#post").click(function(){
+	
+			let param = {
+				"brandId"   : $("#postBrandId").val(),
+		 		"brandNm"   : $("#postBrandNm").val(),
+				"enteredDt" : $("#postEnteredDt").val(),
+				"activeYn"  : $("#postActiveYn").val()
+			}
+	
+			$.ajax({
+				url : "/brand",
+				type : "post",
+				contentType: "application/json",
+				data: JSON.stringify(param), 
+				success : function() {
+					getBrandList();
+				}
+			});
+	
+		});
+	
+		
+		$("#put").click(function(){
+	
+			let param = {
+				"brandNm"   : $("#putBrandNm").val(),
+				"enteredDt" : $("#putEnteredDt").val(),
+				"activeYn"  : $("#putActiveYn").val()
+			}
+	
+			$.ajax({
+				
+				url : "/brand/" + $("#putBrandId").val(),
+				type : "put",
+				contentType: "application/json",
+				data: JSON.stringify(param),
+				success : function() {					
+					getBrandList();
+				}
+			
+			});
+	
+		});
+	
+		
+		$("#delete").click(function(){
+	
+			$.ajax({
+				url : "/brand/" + $("#delBrandId").val(),
+				type : "delete",
+				success : function() {
+					
+					getBrandList();
+					
+				}
+			
+			});
+	
+		});
+	});
+
+	function getBrandList() {
+	
+		$.ajax({
+			url : "/brand",
+			type : "get",
+			success : function(data) {
+	
+				let brandList = `<table border='1'>
+				<tr>
+					<th>brandId</th>
+					<th>brandNm</th>
+					<th>activeYn</th>
+					<th>enteredDt</th>
+				</tr>`;
+				$(data).each(function(){
+					brandList += "<tr>"
+					brandList += "<td>" + this.brandId +"</td>"
+					brandList += "<td>" + this.brandNm +"</td>"
+					brandList += "<td>" + this.activeYn +"</td>"
+					brandList += "<td>" + this.enteredDt +"</td>"
+					brandList += "</tr>"
+				});
+				brandList += "</table>";
+				
+				$("#printBrandList").html(brandList);
+			}
+	
+		});
+	}
+
+</script>
+</head>
+<body>
+
+	<h1>Brand Management</h1>
+	
+	<h3>Get Brand List(전체조회)</h3>
+	<div id="printBrandList">
+	
+	</div>
+	<hr/>
+	
+	<div>
+		<h3>Get Brand Detail(상세조회)</h3>
+		<p>brandId : <input type="text" id="getDetailId" placeholder="brandId"/></p>
+		<div id="printBrandDetail">
+		
+		</div>
+		<input type="button" id="getDetail" value="Get Detail">
+	</div>
+	<hr/>
+	
+	<div>
+		<h3>Post Brand(추가)</h3>
+		<p>brandId :   <input type="text" id="postBrandId" 	placeholder="brandId"/></p>
+		<p>brandNm :   <input type="text" id="postBrandNm" 	placeholder="brandNm"/></p>
+		<p>enteredDt : <input type="text" id="postEnteredDt" placeholder="enteredDt"/></p>
+		<p>activeYn :  <input type="text" id="postActiveYn" 	placeholder="activeYn"/></p>
+		<input type="button" id="post" value="Post">
+	</div>
+	<hr/>
+
+	<div>
+		<h3>Put Brand(수정)</h3>
+			<p>brandId :   <input type="text" id="putBrandId" 	placeholder="brandId"/></p>
+			<p>brandNm :   <input type="text" id="putBrandNm" 	placeholder="brandNm"/></p>
+			<p>enteredDt : <input type="text" id="putEnteredDt" placeholder="enteredDt"/></p>
+			<p>activeYn :  <input type="text" id="putActiveYn" 	placeholder="activeYn"/></p>
+			<input type="button" id="put" value="Put">
+		</div>
+	<hr/>
+
+	<div>
+		<h3>Delete Brand(삭제)</h3>
+		<p>brandId : <input type="text" id="delBrandId" placeholder="brandId"/></p>
+		<input type="button" id="delete" value="Delete">
+	</div>
+
+</body>
+</html>

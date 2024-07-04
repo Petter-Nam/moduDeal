@@ -43,8 +43,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
     
-    @Autowired
-    private CartService cartService;
     
     @Autowired
     private ProductLikeService productLikeService;

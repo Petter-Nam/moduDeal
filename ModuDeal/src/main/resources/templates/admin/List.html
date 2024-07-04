@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin/adminMain}">
+<head>
+<meta charset="UTF-8">
+<title>유저 체크리스트</title>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<div class="card mb-4">
+			<div class="card-header">상품 리스트</div>
+			<div class="card-body">
+				<div class="datatable">
+					<table class="table table-bordered table-hover" id="dataTable"
+						width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>판매자 ID</th>
+								<th>판매자 이름</th>
+								<th>제목</th>
+								<th>설명</th>
+								<th>가격</th>
+								<th>수량</th>
+								<th>삭제</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="product : ${sellerProducts}">
+								<td th:text="${product.userId}"></td>
+								<td th:text="${product.userName}"></td>
+								<td th:text="${product.productTitle}"></td>
+								<td th:text="${product.description}"></td>
+								<td
+									th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></td>
+								<td th:text="${product.quantity}"></td>
+								<td>
+									<form th:action="@{/admin/delete-product}" method="post">
+										<input type="hidden" name="productId"
+											th:value="${product.productId}" />
+										<button type="submit" class="btn btn-danger btn-sm">Delete</button>
+									</form>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-4">
+			<div class="card-header">회원가입 리스트</div>
+			<div class="card-body">
+				<div class="datatable">
+					<table class="table table-bordered table-hover" id="dataTable"
+						width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>가입자 이름</th>
+								<th>생일</th>
+								<th>전화번호</th>
+								<th>이메일</th>
+								<th>주소</th>
+								<th>가입일자</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="user : ${regitUsers}">
+								<td th:text="${user.userId}"></td>
+								<td th:text="${user.name}"></td>
+								<td th:text="${#dates.format(user.birthDate, 'yyyy-MM-dd')}"></td>
+								<td th:text="${user.hp}"></td>
+								<td th:text="${user.email}"></td>
+								<td th:text="${user.addressRoad + ' ' + user.addressNamuji}"></td>
+								<td th:text="${#dates.format(user.joinAt, 'yyyy-MM-dd')}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>
