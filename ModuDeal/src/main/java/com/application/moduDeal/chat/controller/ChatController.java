@@ -3,6 +3,8 @@ package com.application.moduDeal.chat.controller;
 import com.application.moduDeal.chat.dto.ChatDTO;
 import com.application.moduDeal.chat.service.ChatService;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +37,17 @@ public class ChatController {
         @RequestParam("productId") int productId,
         @RequestParam("receiverId") String receiverId,
         @RequestParam("senderId") String senderId,
-        Model model
+        Model model,
+        HttpSession session
     ) {
+        String loggedInUser = (String) session.getAttribute("userId");
+        if (loggedInUser == null) {
+            // 로그인되지 않은 경우, 로그인 페이지로 리다이렉트
+            return "redirect:/moduDeal/login?redirect=/chat?productId=" + productId
+                + "&receiverId=" + receiverId
+                + "&senderId=" + senderId;
+        }
+
         model.addAttribute("productId", productId);
         model.addAttribute("receiverId", receiverId);
         model.addAttribute("senderId", senderId);
@@ -50,7 +61,7 @@ public class ChatController {
         String sellerEmail = chatService.getSellerEmail(receiverId);
         emailService.sendChatNotification(sellerEmail, senderId, chatLink);
 
-        return "moduDeal/chat"; // chat.html 템플릿으로 직접 이동
+        return "moduDeal/chat";
     }
 
 

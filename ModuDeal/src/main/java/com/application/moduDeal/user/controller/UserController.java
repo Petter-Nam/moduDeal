@@ -46,22 +46,24 @@ public class UserController {
 
 	@PostMapping("/login")
 	@ResponseBody
-	public String login(@RequestBody UserDTO userDTO, HttpServletRequest request, 
-	                    @RequestParam(required = false) String redirect) {
-	    String isValiduser = "n";
+	public Map<String, String> login(@RequestBody UserDTO userDTO, HttpServletRequest request, 
+	                                 @RequestParam(value = "redirect", required = false) String redirect) {
+	    Map<String, String> response = new HashMap<>();
 	    UserDTO resultDTO = userService.login(userDTO);
 
 	    if (resultDTO != null) {
 	        HttpSession session = request.getSession();
 	        session.setAttribute("userId", userDTO.getUserId());
-	        isValiduser = "y";
+	        response.put("status", "success");
 	        
 	        if (redirect != null && !redirect.isEmpty()) {
-	            return "redirect:" + redirect;
+	            response.put("redirect", redirect);
 	        }
+	    } else {
+	        response.put("status", "fail");
 	    }
 
-	    return isValiduser;
+	    return response;
 	}
 
 	@GetMapping("/logOut") // 로그아웃하는 코드입니다.
