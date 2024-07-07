@@ -21,21 +21,29 @@
 	    )
 	</insert>
 
-	<select id="getCartItemsByUserId" resultType="CartDTO">
-	    SELECT 
-	        C.CART_ID, C.USER_ID, C.PRODUCT_ID, C.QTY, C.TITLE, C.ADDED_AT, 
-	        P.PRICE, PI.IMG_UUID
-	    FROM 
-	        CART C
-	        JOIN PRODUCT P ON C.PRODUCT_ID = P.PRODUCT_ID
-	        LEFT JOIN (
-	            SELECT PRODUCT_ID, IMG_UUID 
-	            FROM PRODUCT_IMG 
-	            LIMIT 1
-	        ) PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-	    WHERE 
-	        C.USER_ID = #{userId}
-	</select>
+<select id="getCartItemsByUserId" resultType="CartDTO">
+SELECT 
+    C.CART_ID, 
+    C.USER_ID, 
+    C.PRODUCT_ID, 
+    C.QTY, 
+    C.TITLE, 
+    C.ADDED_AT, 
+    P.PRICE, 
+    (SELECT PI.IMG_UUID
+     FROM PRODUCT_IMG PI
+     WHERE PI.PRODUCT_ID = P.PRODUCT_ID
+     ORDER BY PI.IMG_AT ASC
+     LIMIT 1) AS IMG_UUID
+FROM 
+    CART C
+JOIN 
+    PRODUCT P ON C.PRODUCT_ID = P.PRODUCT_ID
+    WHERE 
+        C.USER_ID = #{userId}
+</select>
+
+
 	
 	<select id="getCartItemById" resultType="CartDTO"> 
         SELECT 

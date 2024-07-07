@@ -79,8 +79,7 @@
 										role="button" aria-haspopup="true" aria-expanded="false">고객
 											지원</a>
 										<ul class="dropdown-menu">
-											<li class="nav-item"><a class="nav-link" href="#">공지사항</a></li>
-											<li class="nav-item"><a class="nav-link" href="#">질문</a></li>
+											<li class="nav-item"><a class="nav-link" th:href="@{/moduDeal/noticeList}">공지사항</a></li>
 										</ul></li>
 									<li class="nav-item"><a class="nav-link" th:href="@{/board/product}">판매하기</a>
 									</li>
@@ -89,11 +88,9 @@
 
 							<div class="col-lg-5 pr-0">
 	                            <ul class="nav navbar-nav navbar-right right_nav pull-right">
-	                                <li class="nav-item"><a href="#" class="icons"><i class="ti-search" aria-hidden="true"></i></a></li>
 	                                <th:block th:if="${session.userId != null}">
 	                                    <li class="nav-item"><a th:href="@{/cart/cartList}" class="icons"><i class="ti-shopping-cart"></i></a></li>
 	                                    <li class="nav-item"><a th:href="@{/moduDeal/myPage}" class="icons"><i class="ti-user" aria-hidden="true"></i></a></li>
-	                                    <li class="nav-item"><a href="#" class="icons"><i class="ti-heart" aria-hidden="true"></i></a></li>
 	                                </th:block>
 	                            </ul>
 	                        </div>

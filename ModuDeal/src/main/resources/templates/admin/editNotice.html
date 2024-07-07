@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>공지사항</title>
+    <title>공지사항 수정</title>
     <link href="css/styles.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet" crossorigin="anonymous"/>
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.png"/>
@@ -24,49 +24,20 @@
                 <!-- Default Bootstrap Form Controls-->
                 <div id="default">
                     <div class="card mb-4">
-                        <div class="card-header">공지사항 작성</div>
+                        <div class="card-header">공지사항 수정</div>
                         <div class="card-body">
-                            <form th:action="@{/admin/noticeBoard/save}" method="post">
+                            <form th:action="@{/admin/noticeBoard/update}" method="post">
+                                <input type="hidden" name="noticeId" th:value="${notice.noticeId}">
                                 <div class="form-group">
                                     <label for="noticeTitle">제목</label>
-                                    <input type="text" class="form-control" id="noticeTitle" name="title" placeholder="제목을 입력하세요" required>
+                                    <input type="text" class="form-control" id="noticeTitle" name="title" th:value="${notice.title}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="noticeContent">내용</label>
-                                    <textarea class="form-control" id="noticeContent" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+                                    <textarea class="form-control" id="noticeContent" name="content" rows="10" required th:text="${notice.content}"></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">저장</button>
                             </form>
-                        </div>
-                    </div>
-                    <div class="card mb-4">
-                        <div class="card-header">공지사항 목록</div>
-                        <div class="card-body">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>번호</th>
-                                    <th>제목</th>
-                                    <th>작성자</th>
-                                    <th>작성일</th>
-                                    <th>작업</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="notice : ${notices}">
-                                    <td th:text="${notice.noticeId}"></td>
-                                    <td th:text="${notice.title}"></td>
-                                    <td th:text="${notice.adminId}"></td>
-                                    <td th:text="${#dates.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-                                    <td>
-                                        <a th:href="@{/admin/noticeBoard/edit/{id}(id=${notice.noticeId})}" class="btn btn-primary btn-sm">수정</a>
-                                        <form th:action="@{/admin/noticeBoard/delete/{id}(id=${notice.noticeId})}" method="post" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger btn-sm">삭제</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>

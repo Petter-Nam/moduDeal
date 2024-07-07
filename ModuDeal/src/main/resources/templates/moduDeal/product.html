@@ -80,22 +80,22 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input class="form-control" name="title" id="title" type="text" placeholder="[상품종류][상품 모델][제목]">
+                                        <input class="form-control" name="title" id="title" type="text" placeholder="[상품종류][상품 모델][제목]" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control w-100" name="description" id="description" cols="30" rows="9" placeholder="상품 설명"></textarea>
+                                        <textarea class="form-control w-100" name="description" id="description" cols="30" rows="9" placeholder="상품 설명" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input class="form-control" name="qty" id="qty" type="number" placeholder="상품 수량">
+                                        <input class="form-control" name="qty" id="qty" type="number" placeholder="상품 수량" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input class="form-control" name="price" id="price" type="number" placeholder="상품 개당 가격">
+                                        <input class="form-control" name="price" id="price" type="number" placeholder="상품 개당 가격" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -115,7 +115,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="imgOriginalName">상품 이미지 업로드</label>
-                                        <input type="file" id="imgOriginalName" name="imgOriginalName" multiple accept="image/*"> 
+                                        <input type="file" id="imgOriginalName" name="imgOriginalName" multiple accept="image/*" required> 
                                         <small id="imagesHelp" class="form-text text-muted">여러 이미지를 선택하여 업로드할 수 있습니다.</small>
                                     </div>
                                 </div>
@@ -155,7 +155,6 @@
 <script th:src="@{/js/theme.js}"></script>
 
 <script>
-    // 이 부분은 <script> 태그의 끝에 추가하세요
     $(document).ready(function() {
         // 파일 입력 변경 이벤트를 처리하는 함수
         $('#imgOriginalName').on('change', function() {
@@ -180,9 +179,41 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        // 폼 제출 시 공백 검사
+        $('.board_form').on('submit', function(event) {
+            // 공백 검사 함수
+            function isFieldEmpty(field, fieldName) {
+                if (!field.val().trim()) {
+                    alert(fieldName + '을(를) 입력해주세요.');
+                    field.focus();
+                    return true;
+                }
+                return false;
+            }
+
+            // 각 필드 검사
+            var title = $('#title');
+            var description = $('#description');
+            var qty = $('#qty');
+            var price = $('#price');
+            var imgOriginalName = $('#imgOriginalName');
+
+            if (isFieldEmpty(title, '제목')) return false;
+            if (isFieldEmpty(description, '상품 설명')) return false;
+            if (isFieldEmpty(qty, '상품 수량')) return false;
+            if (isFieldEmpty(price, '상품 가격')) return false;
+            if (!imgOriginalName[0].files.length) {
+                alert('상품 이미지를 선택해주세요.');
+                imgOriginalName.focus();
+                return false;
+            }
+
+            // 모든 검사를 통과하면 폼이 제출됩니다.
+            return true;
+        });
     });
 </script>
 
 </body>
 </html>
-

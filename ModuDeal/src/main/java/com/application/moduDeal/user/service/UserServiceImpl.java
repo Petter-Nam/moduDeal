@@ -1,15 +1,16 @@
 package com.application.moduDeal.user.service;
 
-import java.util.UUID;
+
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.application.moduDeal.chat.controller.EmailService;
+import com.application.moduDeal.admin.dto.NoticeDTO;
 import com.application.moduDeal.user.dao.UserDAO;
 import com.application.moduDeal.user.dto.UserDTO;
 
@@ -24,9 +25,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-    @Autowired
-    private EmailService emailService;
 	
 	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class); 
 	
@@ -146,4 +144,9 @@ public class UserServiceImpl implements UserService {
 		}
 		return email;
 	}
+	
+	@Override
+    public List<NoticeDTO> getAllNotice() {
+        return userDAO.getAllNotice();
+    }
 }

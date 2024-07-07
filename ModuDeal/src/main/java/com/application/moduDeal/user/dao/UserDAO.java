@@ -2,9 +2,12 @@ package com.application.moduDeal.user.dao;
 
 
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.application.moduDeal.admin.dto.NoticeDTO;
 import com.application.moduDeal.user.dto.UserDTO;
 
 @Mapper
@@ -23,5 +26,5 @@ public interface UserDAO {
 	public UserDTO checkUserExists(UserDTO userDTO);
 	public int updatePassword(@Param("userId") String userId, @Param("password") String password);
 	public String findEmailByNameAndPhone(UserDTO userDTO);
-	
+	public List<NoticeDTO> getAllNotice();
 }

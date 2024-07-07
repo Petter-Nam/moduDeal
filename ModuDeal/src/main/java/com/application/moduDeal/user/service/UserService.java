@@ -1,5 +1,8 @@
 package com.application.moduDeal.user.service;
 
+import java.util.List;
+
+import com.application.moduDeal.admin.dto.NoticeDTO;
 import com.application.moduDeal.user.dto.UserDTO;
 
 public interface UserService {
@@ -16,5 +19,6 @@ public interface UserService {
 	public boolean checkUserExists(UserDTO userDTO);
 	public boolean resetPassword(String userId, String password);
 	public String findEmailByNameAndPhone(UserDTO userDTO);
+	public List<NoticeDTO> getAllNotice();
 	
 }

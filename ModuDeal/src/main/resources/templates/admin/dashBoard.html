@@ -23,7 +23,6 @@
 								<th>설명</th>
 								<th>가격</th>
 								<th>수량</th>
-								<th>삭제</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -35,13 +34,6 @@
 								<td
 									th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}"></td>
 								<td th:text="${product.quantity}"></td>
-								<td>
-									<form th:action="@{/admin/delete-product}" method="post">
-										<input type="hidden" name="productId"
-											th:value="${product.productId}" />
-										<button type="submit" class="btn btn-danger btn-sm">Delete</button>
-									</form>
-								</td>
 							</tr>
 						</tbody>
 					</table>

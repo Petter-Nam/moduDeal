@@ -30,4 +30,28 @@
 	    WHERE 
 	        	PRODUCT_ID = #{productId}
 	</select>
+	
+	<select id="getNoticeById" parameterType="int" resultType="NoticeDTO">
+	    SELECT 
+	    		* 
+	    FROM 
+	    		NOTICE 
+	    WHERE 
+	    		NOTICE_ID = #{noticeId}
+	</select>
+	
+	    <!-- 공지사항 댓글 등록 -->
+    <insert id="regitNoticeReview" parameterType="NoticeReviewDTO">
+        INSERT INTO NOTICE_REVIEW (
+        NOTICE_ID, 
+        USER_ID, 
+        CONTENT)
+        VALUES (#{noticeId}, #{userId}, #{content})
+    </insert>
+    
+    <!-- 공지사항의 모든 댓글 조회 -->
+    <select id="getNoticeReviews" resultType="NoticeReviewDTO">
+        SELECT * FROM NOTICE_REVIEW
+        WHERE NOTICE_ID = #{noticeId}
+    </select>
 </mapper>

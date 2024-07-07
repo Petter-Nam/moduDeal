@@ -2,7 +2,7 @@
 <mapper namespace="com.application.moduDeal.admin.dao.AdminDAO">
 
     <select id="login" resultType="AdminDTO">
-        SELECT * FROM ADMIN WHERE USERNAME = #{username} AND PASSWORD = #{password}
+        SELECT * FROM ADMIN WHERE ADMIN_ID = #{adminId} AND PASSWORD = #{password}
     </select>
 
     <select id="getAllSellerProducts" resultMap="sellerProductResultMap">
@@ -61,5 +61,28 @@
     	FROM
     				USER
     </select>
+    
+	<insert id="saveNotice" parameterType="NoticeDTO">
+	    INSERT INTO NOTICE (ADMIN_ID, TITLE, CONTENT)
+	    VALUES (#{adminId}, #{title}, #{content})
+	</insert>
+	
+	<select id="getAllNotices" resultType="NoticeDTO">
+	    SELECT * FROM NOTICE ORDER BY CREATED_AT DESC
+	</select>
+	
+	<select id="getNoticeById" resultType="NoticeDTO">
+	    SELECT * FROM NOTICE WHERE NOTICE_ID = #{noticeId}
+	</select>
+	
+	<update id="updateNotice" parameterType="NoticeDTO">
+	    UPDATE NOTICE
+	    SET TITLE = #{title}, CONTENT = #{content}
+	    WHERE NOTICE_ID = #{noticeId}
+	</update>
+	
+	<delete id="deleteNotice">
+	    DELETE FROM NOTICE WHERE NOTICE_ID = #{noticeId}
+	</delete>
     
 </mapper>

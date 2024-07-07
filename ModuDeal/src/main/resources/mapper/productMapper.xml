@@ -128,46 +128,45 @@
 	</resultMap>
 	
 	
-	<select id="getProductsByUserId" parameterType="string" resultMap="CustomProductResultMap">
-	    SELECT
-	        P.PRODUCT_ID,
-	        P.TITLE,
-	        P.DESCRIPTION,
-	        P.QTY,
-	        P.PRICE,
-	        P.PRODUCT_CATEGORY,
-	        P.USER_ID,
-	        P.PRODUCT_AT,
-	        PI.IMG_UUID AS IMG_UUID,
-	        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
-	        PI.IMG_AT AS IMG_AT
-	    FROM
-	        PRODUCT P
-	    LEFT JOIN (
-	        SELECT 
-	            IMG_UUID,
-	            IMG_ORIGINAL_NAME,
-	            IMG_AT,
-	            PRODUCT_ID
-	        FROM
-	            PRODUCT_IMG
-	        WHERE
-	            PRODUCT_ID IN (
-	                SELECT 
-	                    PRODUCT_ID
-	                FROM 
-	                    PRODUCT
-	                WHERE
-	                    USER_ID = #{userId}
-	            )
-	        ORDER BY IMG_AT DESC
-	        LIMIT 1
-	    ) PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-	    WHERE
-	        P.USER_ID = #{userId}
-	    ORDER BY
-	        P.PRODUCT_AT DESC
-	</select>
+<select id="getProductsByUserId" parameterType="string" resultMap="CustomProductResultMap">
+    SELECT
+        P.PRODUCT_ID,
+        P.TITLE,
+        P.DESCRIPTION,
+        P.QTY,
+        P.PRICE,
+        P.PRODUCT_CATEGORY,
+        P.USER_ID,
+        P.PRODUCT_AT,
+        PI.IMG_UUID AS IMG_UUID,
+        PI.IMG_ORIGINAL_NAME AS IMG_ORIGINAL_NAME,
+        PI.IMG_AT AS IMG_AT
+    FROM
+        PRODUCT P
+    LEFT JOIN (
+        SELECT 
+            IMG_UUID,
+            IMG_ORIGINAL_NAME,
+            IMG_AT,
+            PRODUCT_ID
+        FROM
+            PRODUCT_IMG
+        WHERE
+            (PRODUCT_ID, IMG_AT) IN (
+                SELECT 
+                    PRODUCT_ID,
+                    MAX(IMG_AT) AS IMG_AT
+                FROM 
+                    PRODUCT_IMG
+                GROUP BY PRODUCT_ID
+            )
+    ) PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+    WHERE
+        P.USER_ID = #{userId}
+    ORDER BY
+        P.PRODUCT_AT DESC
+</select>
+
 	
 	<update id="updateProduct" parameterType="ProductDTO">
 	    UPDATE PRODUCT

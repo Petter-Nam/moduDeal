@@ -4,6 +4,7 @@ package com.application.moduDeal.user.controller;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.application.moduDeal.admin.dto.NoticeDTO;
 import com.application.moduDeal.chat.controller.EmailService;
 import com.application.moduDeal.user.dto.UserDTO;
 import com.application.moduDeal.user.service.UserService;
@@ -305,5 +307,12 @@ public class UserController {
 	private boolean isVerificationCodeValid(String code) {
 	    // Implement verification logic (compare with saved code)
 	    return true; // Placeholder
+	}
+	
+	@GetMapping("/noticeList")
+	public String noticeList(Model model) {
+	    List<NoticeDTO> noticeList = userService.getAllNotice();
+	    model.addAttribute("noticeList", noticeList);
+	    return "moduDeal/noticeList";
 	}
 }

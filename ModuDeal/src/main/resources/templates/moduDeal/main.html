@@ -6,91 +6,124 @@
 <meta charset="UTF-8">
 <title>인기 상품</title>
 <style>
-.product-btm a {
-	display: block;
-	font-weight: bold;
-	margin-bottom: 10px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.latest_product_inner .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px;
 }
 
-.latest_product_inner .row {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px; /* 원하는 간격으로 설정 */
+.col-lg-4 {
+    padding: 15px;
+    width: 33.333%;
 }
 
 .single-product {
-	display: flex;
-	flex-direction: column;
-	background-color: #fff; /* 상품 카드 배경색 */
-	border: 1px solid #ddd; /* 상품 카드 테두리 */
-	border-radius: 5px;
-	overflow: hidden;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.single-product:hover {
+    transform: translateY(-5px);
 }
 
 .product-img {
-	position: relative;
-	overflow: hidden;
-	flex: 1; /* 이미지 영역이 동일한 크기를 차지하도록 함 */
+    position: relative;
+    overflow: hidden;
+    padding-top: 75%; /* 4:3 비율 유지 */
 }
 
 .product-img img {
-	width: 100%;
-	height: auto;
-	transition: transform 0.3s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .product-img:hover img {
-	transform: scale(1.1); /* 마우스 호버 시 이미지 확대 효과 */
-}
-
-.product-btm {
-	padding: 10px;
-	flex: 1; /* 상품 정보 영역이 동일한 크기를 차지하도록 함 */
-}
-
-.product-btm a {
-	display: block;
-	font-weight: bold;
-	margin-bottom: 10px;
-}
-
-.product-btm span {
-	display: block;
-	color: #555;
-	font-size: 14px;
+    transform: scale(1.1);
 }
 
 .p_icon {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 5px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
 }
 
-.p_icon a, .p_icon form {
-	display: inline-block;
-	margin: 0 5px;
+.p_icon form {
+    margin: 0 5px;
 }
 
-.p_icon form button, .p_icon button {
-	background: none;
-	border: none;
-	padding: 0;
-	cursor: pointer;
-	color: #888;
-	font-size: 16px;
+.p_icon button {
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.like-button {
-	color: #ff0000; /* 좋아요 버튼 색상 */
+.p_icon button:hover {
+    background: rgba(255, 255, 255, 1);
 }
 
-.liked {
-	color: #ff0000; /* 좋아요 상태일 때 색상 */
+.like-count {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+}
+
+.product-btm {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-btm a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-btm .mt-3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.product-btm .mt-3 span:first-child {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e44d26;
+}
+
+.product-btm .mt-3 span:last-child {
+    font-size: 14px;
+    color: #777;
 }
 </style>
 </head>

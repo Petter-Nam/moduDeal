@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{moduDeal/index}">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>공지사항</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/notice.css" />
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <!--================Notice Area =================-->
+        <section class="notice_area py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="notice_content p-4 rounded shadow">
+                            <h2 th:text="${notice.title}" class="notice_title mb-3">공지사항 제목</h2>
+                            <p th:text="${notice.content}" class="notice_description">공지사항 내용</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!--================Notice Reviews =================-->
+        <section class="notice_review_area py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <!-- 댓글 목록 -->
+                        <div class="review_list">
+                            <h4>댓글</h4>
+                            <div class="review_item" th:each="review : ${noticeReviews}">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <h5 th:text="${review.userId}"></h5>
+                                        <p th:text="${#dates.format(review.createdAt, 'yyyy-MM-dd HH:mm')}"></p>
+                                        <p th:text="${review.content}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 댓글 작성 폼 -->
+                        <div class="review_box mt-5">
+                            <h4>댓글 작성</h4>
+                            <form th:action="@{/review/noticeRegitReview}" method="post">
+                                <input type="hidden" name="noticeId" th:value="${notice.noticeId}" />
+                                <div class="form-group">
+                                    <textarea class="form-control" name="content" rows="5" placeholder="댓글 내용을 입력하세요"></textarea>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="btn submit_btn">댓글 작성</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+</html>
